@@ -11,13 +11,13 @@ import java.util.Scanner;
 
 public class Guesselt {
     private int actualValue;
+    public List<Player> players = new LinkedList<Player>();
 
     /**
      * Prueft ob ein Spieler keine Leben mehr hat.
-     * @param players Liste von Spielern.
      * @return true wenn ein Spieler keine Leben mehr hat, false sont.
      */
-    private static boolean someOneDead(List<Player> players) {
+    public boolean someOneDead() {
         for (Player person : players) {
             if (person.getLives() == 0) {
                 return true;
@@ -30,8 +30,8 @@ public class Guesselt {
      * Webservice zur bestimmen der geographischen Lage der Stadte.
      * @return
      */
-    private static boolean getCoordinates(Player person) {
-        if (person.getPlace1().getName().equals("") || person.getPlace2().getName().equals("")) {
+    private static boolean getCoordinates(Place place) {
+        if (place.getName().equals("")) {
             return false;
         }
         // Wenn Ort nicht vorhanden print("Try again.")
@@ -44,7 +44,7 @@ public class Guesselt {
      * Temperaturunterschied der gewaehlten Orte und dem zufaelligen Wert.
      * @param person ein Spieler.
      */
-    private void webWeather(Player person) {
+    public void webWeather(Player person) {
         //TODO: Webservice Wetter
         int realTemp = 0;
         person.setDiff(realTemp);
@@ -54,7 +54,7 @@ public class Guesselt {
      * gewaehlten Orten und dem zufaelligen Wert.
      * @param person ein Spieler.
      */
-    private void webRoute(Player person) {
+    public void webRoute(Player person) {
         //TODO: Webservice Route
         int realDist = 0;
         person.setDiff(realDist);
@@ -65,12 +65,12 @@ public class Guesselt {
      * @param player Spieler am Zug.
      * @param scanner Scanner Objekt zum einlesen der Staedtenamen.
      */
-    private static void getCity(Player player, Scanner scanner) {
-        while (!getCoordinates(player)) {
+    public static void getCity(Player player, Scanner scanner) {
+        while (!getCoordinates(player.getPlace1())) {
             System.out.println(player.getName() + " type in the first place:");
             player.setPlace1(new Place(scanner.nextLine()));
         }
-        while (!getCoordinates(player)) {
+        while (!getCoordinates(player.getPlace2())) {
             System.out.println(player.getName() + " type in the second place:");
             player.setPlace2(new Place(scanner.nextLine()));
         }
@@ -81,8 +81,7 @@ public class Guesselt {
      * @param list alle Spieler.
      * @return den Spieler, der gewonnen hat.
      */
-    private Player checkPlayerForWin(List<Player> list) {
-        //TODO: Bestimmen welcher Spieler die Runde geqwonnen hat
+    public Player checkPlayerForWin(List<Player> list) {
         for (Player person : list) {
             person.setPlace1(new Place(""));
             person.setPlace2(new Place(""));
@@ -95,43 +94,10 @@ public class Guesselt {
 
     }
 
-    /**
-     * Fuehrt eine Partie Gueasselt aus.
-     * @param args Argumente.
-     */
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        List<Player> players = new LinkedList<>();
-        String tmp = "";
-        while (tmp != null) {
-            System.out.println("Type in new player name (nothing for finished): ");
-            tmp = scanner.nextLine();
-            if (!tmp.equals("")) {
-                players.add(new Player(tmp));
-                System.out.println("Welcome " + tmp + "!");
-            } else {
-                tmp = null;
-            }
-        }
-        System.out.println("Let the game begin!");
-        Random random = new Random();
-        while (!someOneDead(players)) {
-            System.out.println("**********************\nGuess Distance\n**********************\n");
-            int randomDist = random.nextInt(990) + 10;
-            System.out.println("The random distance is" + randomDist);
-            for (Player person : players) {
-                System.out.println("It's your turn " + person.getName());
-                getCity(person, scanner);
-            }
-            //TODO: check what Player has the best Distance Guess
-            System.out.println("**********************\nGuess Temperature\n**********************\n");
-            int randomTemp = random.nextInt(19) + 1;
-            System.out.println("The random temperature is " + randomTemp);
-            for (Player person : players) {
-                System.out.println("It's your turn " + person.getName());
-                getCity(person, scanner);
-            }
-            //TODO: check what Player has the best Tamperature Guess
+    public void setBackCities() {
+        for (Player player : players) {
+            player.getPlace1().setName("");
+            player.getPlace2().setName("");
         }
     }
 }
