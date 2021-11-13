@@ -47,17 +47,26 @@ public class PlayGuesselt {
             guesselt.setBackCities();*/
             System.out.println("**********************\nGuess Temperature\n**********************\n");
             int randomTemp = random.nextInt(19) + 1;
+            guesselt.actualValue = randomTemp;
             System.out.println("The random temperature is " + randomTemp);
             for (Player person : guesselt.players) {
                 System.out.println("It's your turn " + person.getName());
                 guesselt.getCity(person, scanner);
             }
-            //TODO: check what Player has the best Tamperature Guess
             WeatherService weather = new WeatherService();
-            weather.getWeather(guesselt.players.get(0));
-            System.out.println(guesselt.players.get(0).getDiff());
-            System.out.println(guesselt.players.get(0).getName() + ": " + guesselt.players.get(0).getPlace1().getName() + " und " + guesselt.players.get(0).getPlace2().getName());
+            for (Player player : guesselt.players) {
+                weather.getWeather(player);
+                System.out.println(player.getName() + ": " + player.getPlace1().getName() + " und " + player.getPlace2().getName());
+                System.out.println(player.getDiff());
+                guesselt.calcDiff(player);
+            }
+            Player winner = guesselt.checkPlayerForWin();
+            System.out.println("Congratulations " + winner.getName() + " you won this round!");
+            for (Player player : guesselt.players) {
+                hue.setPlayerLight(player);
+            }
             guesselt.setBackCities();
         }
+
     }
 }

@@ -32,6 +32,7 @@ public class HueService {
                 break;
             }
             case 2: {
+                hueString += 5000;
                 break;
             }
             case 3: {

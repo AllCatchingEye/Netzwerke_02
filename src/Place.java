@@ -2,6 +2,15 @@ public class Place {
     private String name;
     private int xVal;
     private int yVal;
+    private double temp;
+
+    public double getTemp() {
+        return temp;
+    }
+
+    public void setTemp(double temp) {
+        this.temp = temp;
+    }
 
     public Place(String name) {
         this.name = name;

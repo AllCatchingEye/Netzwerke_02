@@ -10,7 +10,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Guesselt {
-    private int actualValue;
+    public int actualValue;
     public List<Player> players = new LinkedList<Player>();
 
     /**
@@ -78,20 +78,44 @@ public class Guesselt {
 
     /**
      * Bestimmt den Rundengewinner
-     * @param list alle Spieler.
      * @return den Spieler, der gewonnen hat.
      */
-    public Player checkPlayerForWin(List<Player> list) {
-        for (Player person : list) {
+    public Player checkPlayerForWin() {
+        double minDist = 0.0;
+        for (Player person : players) {
             person.setPlace1(new Place(""));
             person.setPlace2(new Place(""));
+            person.setDiff(Math.abs(actualValue - person.getDiff()));
         }
-        return null;
+        double minDiff = Math.min(players.get(0).getDiff(), players.get(1).getDiff());
+        if (players.size() > 2) {
+            minDiff = Math.min(minDiff, players.get(2).getDiff());
+        }
+        //Sehr haesslich :(
+        Player retPlayer = null;
+        for (Player e : players) {
+            if (e.getDiff() == minDiff) {
+                retPlayer = e;
+            }
+        }
+        for (Player person : players) {
+            if (!person.equals(retPlayer)) {
+                person.setLives(person.getLives() - 1);
+            }
+        }
+        return retPlayer;
     }
 
     private void setLamps(){
         final String LIGHT_URL = "http://localhost:9001/api/newdeveloper/lights/";
 
+    }
+
+    public void calcDiff(Player player) {
+        double temp1 = player.getPlace1().getTemp();
+        double temp2 = player.getPlace2().getTemp();
+        double diff = Math.max(temp1, temp2) - Math.min(temp1, temp2);
+        player.setDiff(diff);
     }
 
     public void setBackCities() {
