@@ -4,7 +4,7 @@ public class Player {
     private final String name;
     private Place place1 = new Place("");
     private Place place2 = new Place("");
-    private int diff;
+    private double diff;
 
     public Player(String name, int identifier) {
         this.name = name;
@@ -31,11 +31,11 @@ public class Player {
         place2 = pla2;
     }
 
-    public int getDiff() {
+    public double getDiff() {
         return diff;
     }
 
-    public void setDiff(int diff) {
+    public void setDiff(double diff) {
         this.diff = diff;
     }
 

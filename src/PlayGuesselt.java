@@ -36,7 +36,7 @@ public class PlayGuesselt {
         System.out.println("Let the game begin!");
         Random random = new Random();
         while (!guesselt.someOneDead()) {
-            System.out.println("**********************\nGuess Distance\n**********************\n");
+            /*System.out.println("**********************\nGuess Distance\n**********************\n");
             int randomDist = random.nextInt(990) + 10;
             System.out.println("The random distance is " + randomDist);
             for (Player person : guesselt.players) {
@@ -44,7 +44,7 @@ public class PlayGuesselt {
                 guesselt.getCity(person, scanner);
             }
             //TODO: check what Player has the best Distance Guess
-            guesselt.setBackCities();
+            guesselt.setBackCities();*/
             System.out.println("**********************\nGuess Temperature\n**********************\n");
             int randomTemp = random.nextInt(19) + 1;
             System.out.println("The random temperature is " + randomTemp);
@@ -54,7 +54,9 @@ public class PlayGuesselt {
             }
             //TODO: check what Player has the best Tamperature Guess
             WeatherService weather = new WeatherService();
-            weather.getWeather(guesselt.players.get(0).getPlace1());
+            weather.getWeather(guesselt.players.get(0));
+            System.out.println(guesselt.players.get(0).getDiff());
+            System.out.println(guesselt.players.get(0).getName() + ": " + guesselt.players.get(0).getPlace1().getName() + " und " + guesselt.players.get(0).getPlace2().getName());
             guesselt.setBackCities();
         }
     }

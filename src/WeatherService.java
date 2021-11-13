@@ -1,35 +1,29 @@
-import com.sun.tools.javac.Main;
-
 import javax.json.JsonObject;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import javax.json.JsonString;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * API key: '16a715ae23001ede6a0aba7c6d707daa'.
  */
 public class WeatherService {
-    public void getWeather(Place place) {
-        String city = "Paris"; //TODO: can#t access parameter place Why?!
-        String anfrage = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=16a715ae23001ede6a0aba7c6d707daa";
-        HttpURLConnection con;
-        StringBuilder index = new StringBuilder();
-        try {
-            con = (HttpURLConnection) new URL(anfrage).openConnection();
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
-                /*for (String line = br.readLine(); line != null; line = br.readLine()) {
-                    index.append(line);
-                }*/
-                JsonObject jsonObj = JsonObjectFromUrlUtil.getJsonObjectFromUrl(anfrage);
+    public void getWeather(Player player) {
+        String anfrage = "https://api.openweathermap.org/data/2.5/weather?q=" + player.getPlace1().getName() + "&appid=16a715ae23001ede6a0aba7c6d707daa";
+        JsonObject jsonObj = JsonObjectFromUrlUtil.getJsonObjectFromUrl(anfrage);
+        //jsonObj.entrySet().forEach( e -> System.out.println( "key=" + e.getKey() + ", val=" + e.getValue() + "\n" ) );
+        //System.out.println("***************************************");
+        JsonObject tempArray =  jsonObj.getJsonObject("main");
+        //tempArray.entrySet().forEach(e -> System.out.println("key:" + e.getKey() + ", val=" + e.getValue() + "\n") );
+        //System.out.println("***************************************");
+        int temp = tempArray.getInt("temp");
+        double celsius =  temp - 273.15;
+        System.out.println("Temperature: " + celsius);
 
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println(place.getName() + ":");
-        System.out.println(index);
+        String anfrage2 = "https://api.openweathermap.org/data/2.5/weather?q=" + player.getPlace2().getName() + "&appid=16a715ae23001ede6a0aba7c6d707daa";
+        JsonObject jsonObj2 = JsonObjectFromUrlUtil.getJsonObjectFromUrl(anfrage2);
+        JsonObject tempArray2 =  jsonObj2.getJsonObject("main");
+        int temp2 = tempArray2.getInt("temp");
+        double celsius2 =  temp2 - 273.15;
+        System.out.println("Temperature: " + celsius2);
+        player.setDiff(celsius - celsius2);
     }
 }
