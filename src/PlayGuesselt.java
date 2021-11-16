@@ -51,12 +51,9 @@ public class PlayGuesselt {
             System.out.println("**********************\nGuess Temperature\n**********************\n");
             int randomTemp = random.nextInt(19) + 1;
             guesselt.actualValue = randomTemp;
-            WeatherService weather = new WeatherService();
             System.out.println("The random temperature is " + randomTemp);
-            for (Player person : guesselt.players) {
-                System.out.println("It's your turn " + person.getName());
-                guesselt.getCity(person, scanner);
-            }
+            guesselt.getCity(guesselt.players, scanner);
+
             for (Player player : guesselt.players) {
                 System.out.println(player.getName() + ": " + player.getPlace1().getName() + " und " + player.getPlace2().getName());
                 System.out.println(player.getDiff());

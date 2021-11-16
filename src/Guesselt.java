@@ -28,18 +28,38 @@ public class Guesselt {
 
     /**
      * liest die gewaelten Staedte des Spielers ein
-     * @param player Spieler am Zug.
+     * @param players Liste der Spieler.
      * @param scanner Scanner Objekt zum einlesen der Staedtenamen.
      */
-    public static void getCity(Player player, Scanner scanner) {
-        while (player.getPlace1().getName().equals("") || !WeatherService.existingCity(player.getPlace1())) {
-            System.out.println(player.getName() + " type in the first place:");
-            player.setPlace1(new Place(scanner.nextLine()));
+    public static void getCity(List<Player> players, Scanner scanner) {
+        for (Player player : players) {
+            System.out.println("It's your turn " + player.getName());
+            while (player.getPlace1().getName().equals("") || !WeatherService.existingCity(player.getPlace1())) {
+                System.out.println(player.getName() + " type in the first place:");
+                Place newCity = new Place(scanner.nextLine());
+                if (checkCityChosen(players, newCity)) {
+                    player.setPlace1(newCity);
+                }
+            }
+            while (player.getPlace2().getName().equals("") || !WeatherService.existingCity(player.getPlace2())) {
+                System.out.println(player.getName() + " type in the second place:");
+                Place newCity = new Place(scanner.nextLine());
+                if (checkCityChosen(players, newCity)) {
+                    player.setPlace2(newCity);
+                }
+            }
         }
-        while (player.getPlace2().getName().equals("") || !WeatherService.existingCity(player.getPlace2())) {
-            System.out.println(player.getName() + " type in the second place:");
-            player.setPlace2(new Place(scanner.nextLine()));
+    }
+
+    private static boolean checkCityChosen(List<Player> players, Place city){
+        for (Player player : players) {
+            if(player.getPlace1().getName().equals(city.getName()) ||
+                    player.getPlace2().getName().equals(city.getName())) {
+                System.out.println("Another player already selected this city.");
+                return false;
+            }
         }
+        return true;
     }
 
     /**
