@@ -1,9 +1,5 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.Socket;
-import java.net.URL;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
 
 /**
  * Klasse fuer GeoServeice.
@@ -33,27 +29,28 @@ public class RouteService {
 
     }
 
-    public void getCoordinates(Place place) {
+    /*public static void getCoordinates(Place place) {
         String anfrage = "https://geocode.search.hereapi.com/v1/geocode?q=" + place.getName() + "&apiKey=jDBuS4GoWg4hNum0o5Jb25l5FDJTpd-S7Ku_MbYSPuY";
-        HttpURLConnection con;
-        StringBuilder index = new StringBuilder();
+        String response = """
+                key=items, val=[{"title":"M?nchen, Bayern, Deutschland","id":"here:cm:namedplace:20177269","resultType":"locality","localityType":"city",
+                "address":{"label":"M?nchen, Bayern, Deutschland","countryCode":"DEU","countryName":"Deutschland","stateCode":"BY","state":"Bayern",
+                "countyCode":"M","county":"M?nchen (Stadt)","city":"M?nchen","postalCode":"80331"},"position":{"lat":48.13641,"lng":11.57754},
+                "mapView":{"west":11.36084,"south":48.06175,"east":11.72291,"north":48.24824},
+                "scoring":{"queryScore":1.0,"fieldScore":{"city":1.0}}}]
+        """;
         try {
-            con = (HttpURLConnection) new URL(anfrage).openConnection();
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"))) {
-                //TODO:
-                for (String line = br.readLine(); line != null; line = br.readLine()) {
-                    index.append(line);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+            JsonObject jsonObj = JsonObjectFromUrlUtil.getJsonObjectFromUrl(anfrage);
+        } catch (Exception e) {
+            System.out.println("Route Failure!");
         }
-
-        System.out.println(index);
-    }
+    }*/
 
     public static void main(String[] args) {
-        RouteService route = new RouteService();
-        route.getCoordinates(new Place("Wolfsburg"));
+        Player player =  new Player("Name", 1);
+        player.setPlace1(new Place("M?nchen"));
+        player.setPlace2(new Place("Wien"));
+        WeatherService.existingCity(player.getPlace1());
+        WeatherService.existingCity(player.getPlace2());
+        RouteService.getRoute(player);
     }
 }

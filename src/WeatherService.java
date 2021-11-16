@@ -1,4 +1,3 @@
-import javax.json.JsonNumber;
 import javax.json.JsonObject;
 
 /**
@@ -10,6 +9,7 @@ public class WeatherService {
         try {
             String anfrage = "https://api.openweathermap.org/data/2.5/weather?q=" + place.getName() + "&appid=16a715ae23001ede6a0aba7c6d707daa";
             JsonObject jsonObj = JsonObjectFromUrlUtil.getJsonObjectFromUrl(anfrage);
+            //jsonObj.entrySet().forEach( e -> System.out.println( "key=" + e.getKey() + ", val=" + e.getValue() + "\n" ) );
 
             JsonObject tempArray =  jsonObj.getJsonObject("main");
             JsonObject coordArray =  jsonObj.getJsonObject("coord");
@@ -19,8 +19,8 @@ public class WeatherService {
             double kelvin = tempArray.getJsonNumber("temp").doubleValue();
             double celsius =  kelvin - 273.15;
 
-            place.setxVal(lon);
-            place.setyVal(lat);
+            place.setLat(lon);
+            place.setLon(lat);
             place.setTemp(celsius);
         } catch (Exception e) {
             System.out.println("Stadt existiert nicht.");

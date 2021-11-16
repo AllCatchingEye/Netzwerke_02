@@ -1,8 +1,17 @@
 public class Place {
     private String name;
-    private double xVal;
-    private double yVal;
+    private double lat;
+    private double lon;
     private double temp;
+    private double route;
+
+    public double getRoute() {
+        return route;
+    }
+
+    public void setRoute(double route) {
+        this.route = route;
+    }
 
     public double getTemp() {
         return temp;
@@ -24,19 +33,19 @@ public class Place {
         this.name = name;
     }
 
-    public double getxVal() {
-        return xVal;
+    public double getLat() {
+        return lat;
     }
 
-    public void setxVal(double xVal) {
-        this.xVal = xVal;
+    public void setLat(double lat) {
+        this.lat = lat;
     }
 
-    public double getyVal() {
-        return yVal;
+    public double getLon() {
+        return lon;
     }
 
-    public void setyVal(double yVal) {
-        this.yVal = yVal;
+    public void setLon(double lon) {
+        this.lon = lon;
     }
 }

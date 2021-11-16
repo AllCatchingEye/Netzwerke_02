@@ -46,6 +46,7 @@ public class PlayGuesselt {
                 System.out.println("It's your turn " + person.getName());
                 guesselt.getCity(person, scanner);
             }
+
             //TODO: check what Player has the best Distance Guess
             guesselt.setBackCities();*/
             System.out.println("**********************\nGuess Temperature\n**********************\n");
