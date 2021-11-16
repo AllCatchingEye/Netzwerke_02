@@ -12,6 +12,7 @@ public class PlayGuesselt {
         Scanner scanner = new Scanner(System.in);
         String tmp = "";
         int num = 1;
+        // Anmeldung der Spieler. Mindestens zwei und maximal drei.
         while (tmp != null && guesselt.players.size() < 3) {
             System.out.println("Type in new player name (nothing for finished): ");
             tmp = scanner.nextLine();
@@ -27,9 +28,11 @@ public class PlayGuesselt {
                 }
             }
         }
+        // Schalte alle Lichter aus.
         for (int i = 1; i <= 3; i++) {
             hue.allLightsOff(i);
         }
+        // Schalte Lichter fuer angemeldete Spieler ein
         for (Player player: guesselt.players) {
             hue.setPlayerLight(player);
         }
@@ -48,14 +51,13 @@ public class PlayGuesselt {
             System.out.println("**********************\nGuess Temperature\n**********************\n");
             int randomTemp = random.nextInt(19) + 1;
             guesselt.actualValue = randomTemp;
+            WeatherService weather = new WeatherService();
             System.out.println("The random temperature is " + randomTemp);
             for (Player person : guesselt.players) {
                 System.out.println("It's your turn " + person.getName());
                 guesselt.getCity(person, scanner);
             }
-            WeatherService weather = new WeatherService();
             for (Player player : guesselt.players) {
-                weather.getWeather(player);
                 System.out.println(player.getName() + ": " + player.getPlace1().getName() + " und " + player.getPlace2().getName());
                 System.out.println(player.getDiff());
                 guesselt.calcDiff(player);
@@ -67,6 +69,7 @@ public class PlayGuesselt {
             }
             guesselt.setBackCities();
         }
-
+        Player winner = guesselt.absoluteWinner();
+        hue.setWinnerLight(winner);
     }
 }

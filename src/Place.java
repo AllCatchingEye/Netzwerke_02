@@ -1,7 +1,7 @@
 public class Place {
     private String name;
-    private int xVal;
-    private int yVal;
+    private double xVal;
+    private double yVal;
     private double temp;
 
     public double getTemp() {
@@ -24,19 +24,19 @@ public class Place {
         this.name = name;
     }
 
-    public int getxVal() {
+    public double getxVal() {
         return xVal;
     }
 
-    public void setxVal(int xVal) {
+    public void setxVal(double xVal) {
         this.xVal = xVal;
     }
 
-    public int getyVal() {
+    public double getyVal() {
         return yVal;
     }
 
-    public void setyVal(int yVal) {
+    public void setyVal(double yVal) {
         this.yVal = yVal;
     }
 }

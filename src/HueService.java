@@ -32,7 +32,7 @@ public class HueService {
                 break;
             }
             case 2: {
-                hueString += 5000;
+                hueString += 10000;
                 break;
             }
             case 3: {
@@ -40,8 +40,8 @@ public class HueService {
                 break;
             }
             default: {
-                hueString += 0 + ", \"effect\": colorloop";
-            };
+                hueString += 0;
+            }
         }
 
         try {
@@ -82,5 +82,9 @@ public class HueService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void setWinnerLight(Player winner) {
+
     }
 }
