@@ -38,12 +38,10 @@ public class WeatherService {
             JsonObject tempArray =  jsonObj.getJsonObject("main");
             JsonObject coordArray =  jsonObj.getJsonObject("coord");
 
-            JsonNumber lonJson = coordArray.getJsonNumber("lon");
-            double lon = lonJson.doubleValue();
-            JsonNumber latJson = coordArray.getJsonNumber("lat");
-            double lat = latJson.doubleValue();
-            JsonNumber tempJson = tempArray.getJsonNumber("temp");
-            double temp = tempJson.doubleValue();
+            double lon = coordArray.getJsonNumber("lon").doubleValue();
+            double lat = coordArray.getJsonNumber("lat").doubleValue();
+            double kelvin = tempArray.getJsonNumber("temp").doubleValue();
+            double celsius =  kelvin - 273.15;
 
             place.setxVal(lon);
             place.setyVal(lat);
