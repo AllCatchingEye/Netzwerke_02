@@ -12,12 +12,21 @@ import java.net.URL;
  * API Key: API Key: jDBuS4GoWg4hNum0o5Jb25l5FDJTpd-S7Ku_MbYSPuY.
  */
 public class RouteService {
-    private Place place1 = new Place("");
-    private Place place2 = new Place("");
 
-    public RouteService(Place pla1, Place pla2) {
-        place1 = pla1;
-        place2 = pla2;
+    public static void getRoute(Player player) {
+        String origin = player.getPlace1().getLat() + "," + player.getPlace2().getLon();
+        String destination = player.getPlace2().getLat() + "," + player.getPlace2().getLon();
+        String url = "https://router.hereapi.com/v8/routes?transportMode=car&origin=" + origin
+                + "&destination=" + destination + "&return=summary&apiKey=jDBuS4GoWg4hNum0o5Jb25l5FDJTpd-S7Ku_MbYSPuY";
+
+        try {
+            JsonObject jsonObj = JsonObjectFromUrlUtil.getJsonObjectFromUrl(url);
+            jsonObj.entrySet().forEach( e -> System.out.println( "key=" + e.getKey() + ", val=" + e.getValue() + "\n" ) );
+            JsonArray routeArray = jsonObj.getJsonArray("items");
+
+        } catch (Exception e) {
+            System.out.println("Route Failure!");
+        }
     }
 
     public RouteService(){
