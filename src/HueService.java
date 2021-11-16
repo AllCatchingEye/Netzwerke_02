@@ -15,19 +15,10 @@ public class HueService {
     Permission Whitelist
      */
 
-    public JsonObject setPlayerLight(Player player) {
-
-        // Convert RGB to HSB
-
-
+    public static JsonObject setPlayerLight(Player player) {
         String hueString = "\"hue\": ";
         switch (player.getLives()) {
             case 1: {
-//                https://examples.javacodegeeks.com/desktop-java/awt/rgb-to-hsb-and-vice-versa-color-conversion/
-//                int red = 255;
-//                int green = 0;
-//                int blue = 0;
-//                float[] hsb = Color.RGBtoHSB(red, green, blue, null);
                 hueString += 0;
                 break;
             }
@@ -41,6 +32,8 @@ public class HueService {
             }
             default: {
                 hueString += 0;
+                Blinker blinker = new Blinker(player);
+                blinker.start();
             }
         }
 
@@ -82,6 +75,24 @@ public class HueService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void setLoserLight(String toSend, Player loser) {
+        String LIGHT_URL = "http://localhost:8000/api/newdeveloper/lights/";
+        try {
+            HttpURLConnection conn = (HttpURLConnection) (new URL(LIGHT_URL + loser.getId() + "/state")).openConnection();
+            conn.setRequestMethod("PUT");
+            conn.setDoOutput(true);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Accept", "application/json");
+            OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());
+            osw.write(toSend);
+            osw.flush();
+            osw.close();
+            System.err.println(conn.getResponseCode());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setWinnerLight(Player winner) {

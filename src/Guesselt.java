@@ -106,6 +106,14 @@ public class Guesselt {
         }
     }
 
+    public void setLightsNew(){
+        Player winner = checkPlayerForWin();
+        System.out.println("Congratulations " + winner.getName() + " you won this round!");
+        for (Player player : players) {
+            HueService.setPlayerLight(player);
+        }
+    }
+
     public Player absoluteWinner() {
         return null;
     }

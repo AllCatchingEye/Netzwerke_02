@@ -54,8 +54,8 @@ public class RouteService {
 
     public static void main(String[] args) {
         Player player =  new Player("Name", 1);
-        player.setPlace1(new Place("M?nchen"));
-        player.setPlace2(new Place("Wien"));
+        player.setPlace1(new Place("Muenchen"));
+        player.setPlace2(new Place("Berlin"));
         WeatherService.existingCity(player.getPlace1());
         WeatherService.existingCity(player.getPlace2());
         RouteService.getRoute(player);

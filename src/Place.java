@@ -3,15 +3,6 @@ public class Place {
     private double lat;
     private double lon;
     private double temp;
-    private double route;
-
-    public double getRoute() {
-        return route;
-    }
-
-    public void setRoute(double route) {
-        this.route = route;
-    }
 
     public double getTemp() {
         return temp;
