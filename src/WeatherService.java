@@ -19,8 +19,8 @@ public class WeatherService {
             double kelvin = tempArray.getJsonNumber("temp").doubleValue();
             double celsius =  kelvin - 273.15;
 
-            place.setLat(lon);
-            place.setLon(lat);
+            place.setLat(lat);
+            place.setLon(lon);
             place.setTemp(celsius);
         } catch (Exception e) {
             System.out.println("Stadt existiert nicht.");

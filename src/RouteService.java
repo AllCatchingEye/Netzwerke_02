@@ -10,7 +10,7 @@ import javax.json.JsonObject;
 public class RouteService {
 
     public static void getRoute(Player player) {
-        String origin = player.getPlace1().getLat() + "," + player.getPlace2().getLon();
+        String origin = player.getPlace1().getLat() + "," + player.getPlace1().getLon();
         String destination = player.getPlace2().getLat() + "," + player.getPlace2().getLon();
         String url = "https://router.hereapi.com/v8/routes?transportMode=car&origin=" + origin
                 + "&destination=" + destination + "&return=summary&apiKey=jDBuS4GoWg4hNum0o5Jb25l5FDJTpd-S7Ku_MbYSPuY";
@@ -18,7 +18,14 @@ public class RouteService {
         try {
             JsonObject jsonObj = JsonObjectFromUrlUtil.getJsonObjectFromUrl(url);
             jsonObj.entrySet().forEach( e -> System.out.println( "key=" + e.getKey() + ", val=" + e.getValue() + "\n" ) );
-            JsonArray routeArray = jsonObj.getJsonArray("items");
+            JsonArray routesArray = jsonObj.getJsonArray("routes");
+            JsonObject routesObject = routesArray.getJsonObject(0);
+            JsonArray sectionsArray = routesObject.getJsonArray("sections");
+            JsonObject sectionsObject = sectionsArray.getJsonObject(0);
+            JsonObject summeryObject = sectionsObject.getJsonObject("summary");
+            int length = summeryObject.getJsonNumber("length").intValue();
+            player.setDiff((double)length / 1000);
+            System.out.println("Laenge: " + length);
 
         } catch (Exception e) {
             System.out.println("Route Failure!");
