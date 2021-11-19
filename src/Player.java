@@ -52,5 +52,7 @@ public class Player {
     public void setLives(int lives) {
         this.lives = lives;
     }
+
+    public boolean getRemote(){ return remote; }
 }
 

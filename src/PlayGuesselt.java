@@ -55,9 +55,15 @@ public class PlayGuesselt {
             guesselt.getCity(guesselt.players, scanner);
 
             for (Player player : guesselt.players) {
-                System.out.println(player.getName() + ": " + player.getPlace1().getName() + " und " + player.getPlace2().getName());
-                System.out.println(player.getDiff());
-                guesselt.calcDiff(player);
+                if(player.getRemote()){
+                    System.out.println(player.getName() + ": " + player.getPlace1().getName() + " und " + player.getPlace2().getName());
+                    System.out.println(player.getDiff());
+                    guesselt.calcDiff(player);
+                }else{
+                    System.out.println(player.getName() + ": " + player.getPlace1().getName() + " und " + player.getPlace2().getName());
+                    System.out.println(player.getDiff());
+                    guesselt.calcDiff(player);
+                }
             }
             guesselt.setLightsNew();
             guesselt.setBackCities();
