@@ -5,10 +5,12 @@ public class Player {
     private Place place1 = new Place("");
     private Place place2 = new Place("");
     private double diff;
+    private boolean remote;
 
-    public Player(String name, int identifier) {
+    public Player(String name, int identifier, boolean remote) {
         this.name = name;
         this.id = identifier;
+        this.remote = remote;
     }
 
     public Place getPlace1() {

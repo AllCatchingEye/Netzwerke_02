@@ -14,19 +14,15 @@ public class PlayGuesselt {
         int num = 1;
         // Anmeldung der Spieler. Mindestens zwei und maximal drei.
         while (tmp != null && guesselt.players.size() < 3) {
-            System.out.println("Type in new player name (nothing for finished): ");
-            tmp = scanner.nextLine();
-            if (!tmp.equals("")) {
-                guesselt.players.add(new Player(tmp, num));
-                System.out.println("Welcome " + tmp + "!");
-                num++;
+            System.out.println("Do you want to play remote? (y/n): ");
+            String remote = scanner.nextLine();
+            if (remote.equals("n")) {
+                System.out.println("Type in new player name (nothing for finished): ");
+                tmp = scanner.nextLine();
             } else {
-                if (guesselt.players.size() < 2) {
-                    System.out.println("There have to be minimum two players.");
-                } else {
-                    tmp = null;
-                }
+                tmp = Remote.getPlayerName();
             }
+            checkPlayerCount(tmp, num, guesselt);
         }
         // Schalte alle Lichter aus.
         for (int i = 1; i <= 3; i++) {
@@ -67,7 +63,20 @@ public class PlayGuesselt {
             guesselt.setBackCities();
         }
         Player winner = guesselt.absoluteWinner();
-        hue.setWinnerLight(winner);
+        HueService.setWinnerLight(winner);
     }
 
+    private static void checkPlayerCount(String name, int num, Guesselt guesselt) {
+        if (!name.equals("")) {
+            guesselt.players.add(new Player(name, num, false));
+            System.out.println("Welcome " + name + "!");
+            num++;
+        } else {
+            if (guesselt.players.size() < 2) {
+                System.out.println("There have to be minimum two players.");
+            } else {
+                name = null;
+            }
+        }
+    }
 }

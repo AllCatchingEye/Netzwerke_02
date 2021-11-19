@@ -1,0 +1,33 @@
+{
+    "course": {
+        "name": [
+            {
+                "lang": "English",
+                "#text": "Computer Networks I"
+            },
+            {
+                "lang": "German",
+                "#text": "Netzwerke I"
+            },
+        ],
+        "typ": "SU",
+        "lecturer: [
+            {
+                "id:" 7341,
+                "firstname": "Peter",
+                "lastname": "Lustig"
+            },
+            {
+                "id": 7011,
+                "firstname": "Sabine",
+                "lastname": "Schlau",
+                "visiting": ""
+            },
+        ],
+        "location": {
+            "room": "R0.006",
+            "street": "Lothstr. 64",
+            "city": "Munich"
+        },
+    }
+}
