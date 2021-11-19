@@ -38,8 +38,6 @@ public class HueService {
         }
 
         try {
-            //String LIGHT_URL = "http://localhost:8000/api/newdeveloper/lights/";
-            String LIGHT_URL = "http://10.28.209.13:9001/api/3dc1d8f23e55321f3c049c03ac88dff/lights/";
             HttpURLConnection conn = (HttpURLConnection) (new URL(LIGHT_URL + player.getId() + "/state")).openConnection();
             conn.setRequestMethod("PUT");
             conn.setDoOutput(true);
@@ -80,8 +78,6 @@ public class HueService {
     }
 
     public static void setLoserLight(String toSend, Player loser) {
-        //String LIGHT_URL = "http://localhost:8000/api/newdeveloper/lights/";
-        String LIGHT_URL = "http://10.28.209.13:9001/api/3dc1d8f23e55321f3c049c03ac88dff/lights/";
         try {
             HttpURLConnection conn = (HttpURLConnection) (new URL(LIGHT_URL + loser.getId() + "/state")).openConnection();
             conn.setRequestMethod("PUT");
@@ -99,8 +95,6 @@ public class HueService {
     }
 
     public static void setWinnerLight(Player player) {
-        String LIGHT_URL = "http://10.28.209.13:9001/api/3dc1d8f23e55321f3c049c03ac88dff/lights/";
-        //String LIGHT_URL = "http://10.128.209.13:9001/api/newdeveloper/lights/";
         try {
             HttpURLConnection conn = (HttpURLConnection) (new URL(LIGHT_URL + player.getId() + "/state")).openConnection();
             conn.setRequestMethod("PUT");

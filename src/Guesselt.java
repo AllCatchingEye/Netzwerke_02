@@ -1,5 +1,6 @@
 /**
  * Guesselt Programm.
+ *
  * @author Georg Lang, Nicolas Lerch.
  * @version 11.11.2021.
  */
@@ -51,9 +52,9 @@ public class Guesselt {
         }
     }
 
-    private static boolean checkCityChosen(List<Player> players, Place city){
+    private static boolean checkCityChosen(List<Player> players, Place city) {
         for (Player player : players) {
-            if(player.getPlace1().getName().equals(city.getName()) ||
+            if (player.getPlace1().getName().equals(city.getName()) ||
                     player.getPlace2().getName().equals(city.getName())) {
                 System.out.println("Another player already selected this city.");
                 return false;
@@ -106,7 +107,7 @@ public class Guesselt {
         }
     }
 
-    public void setLightsNew(){
+    public void setLightsNew() {
         Player winner = checkPlayerForWin();
         System.out.println("Congratulations " + winner.getName() + " you won this round!");
         for (Player player : players) {

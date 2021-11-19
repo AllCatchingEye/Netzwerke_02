@@ -1,7 +1,7 @@
 public class Player {
     private int lives = 3;
-    private final int id;
-    private final String name;
+    private int id;
+    private String name;
     private Place place1 = new Place("");
     private Place place2 = new Place("");
     private double diff;

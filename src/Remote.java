@@ -25,17 +25,23 @@ public class Remote {
                     String RES = "";
                     for (String line = fromClient.readLine(); line != null
                             && line.length() > 0; line = fromClient.readLine()) {
-                        if (line.contains("GET")) {
-                            String[] parts = line.split(" ");
-                            if (!parts[1].equals("/")) {
-                                RES = parts[1];
-                            }
-                            System.out.println("Found GET: " + RES);
+                        if (line.contains("name")) {
+                            String[] parts = line.split("=| ");
+                            String name = parts[2];
+                            System.out.println("Found name: " + name);
+                            player = new Player(name, true);
+                        } else if (line.contains("place1")) {
+                            String[] parts = line.split("=|&| ");
+                            String place1 = parts[2];
+                            String place2 = parts[4];
+                            System.out.println("Found place1: " + place1);
+                            System.out.println("Found place2: " + place2);
+                            player.setPlace1(new Place(place1));
+                            player.setPlace2(new Place(place2));
+                            WeatherService.existingCity(player.getPlace1());
+                            WeatherService.existingCity(player.getPlace2());
                         }
-                        System.out.println("Client says: " + line);
                     }
-
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -44,18 +50,19 @@ public class Remote {
                 e.printStackTrace();
             }
         }
-    }
+
+    //}
 
     public static String getPlayerName(){
         return null;
     }
 
     public static String getPlace1(){
-        return null;
+        return getPlace1();
     }
 
     public static String getPlace2(){
-        return null;
+        return getPlace2();
     }
 
 
@@ -63,5 +70,4 @@ public class Remote {
         Remote remote = new Remote();
         remote.startServer();
     }
-
 }

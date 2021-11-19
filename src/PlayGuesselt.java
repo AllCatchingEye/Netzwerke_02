@@ -12,6 +12,7 @@ public class PlayGuesselt {
         Scanner scanner = new Scanner(System.in);
         String tmp = "";
         int num = 1;
+        Remote remoteServer = new Remote();
         // Anmeldung der Spieler. Mindestens zwei und maximal drei.
         while (tmp != null && guesselt.players.size() < 3) {
             System.out.println("Do you want to play remote? (y/n): ");
@@ -52,14 +53,9 @@ public class PlayGuesselt {
             int randomTemp = random.nextInt(19) + 1;
             guesselt.actualValue = randomTemp;
             System.out.println("The random temperature is " + randomTemp);
-            guesselt.getCity(guesselt.players, scanner);
+            guesselt.getCity(guesselt.players, scanner, remoteServer);
 
             for (Player player : guesselt.players) {
-                if(player.getRemote()){
-                    System.out.println(player.getName() + ": " + player.getPlace1().getName() + " und " + player.getPlace2().getName());
-                    System.out.println(player.getDiff());
-                    guesselt.calcDiff(player);
-                }else{
                     System.out.println(player.getName() + ": " + player.getPlace1().getName() + " und " + player.getPlace2().getName());
                     System.out.println(player.getDiff());
                     guesselt.calcDiff(player);
