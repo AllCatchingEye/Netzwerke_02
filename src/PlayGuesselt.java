@@ -79,7 +79,7 @@ public class PlayGuesselt {
     }
 
     private static void checkPlayerCount(String name, int num, Guesselt guesselt) {
-        if (!name.equals("")) {
+        if (name != null && !name.equals("")) {
             System.out.println("Welcome " + name + "!");
             num++;
         } else {

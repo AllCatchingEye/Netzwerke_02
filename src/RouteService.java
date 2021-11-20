@@ -17,7 +17,7 @@ public class RouteService {
 
         try {
             JsonObject jsonObj = JsonObjectFromUrlUtil.getJsonObjectFromUrl(url);
-            jsonObj.entrySet().forEach( e -> System.out.println( "key=" + e.getKey() + ", val=" + e.getValue() + "\n" ) );
+            //jsonObj.entrySet().forEach( e -> System.out.println( "key=" + e.getKey() + ", val=" + e.getValue() + "\n" ) );
             JsonArray routesArray = jsonObj.getJsonArray("routes");
             JsonObject routesObject = routesArray.getJsonObject(0);
             JsonArray sectionsArray = routesObject.getJsonArray("sections");
