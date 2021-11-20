@@ -46,36 +46,40 @@ public class PlayGuesselt {
         }
         System.out.println("Let the game begin!");
         Random random = new Random();
-        while (!guesselt.someOneDead()) {
-            System.out.println("**********************\nGuess Distance\n**********************\n");
-            int randomDist = random.nextInt(990) + 10;
-            System.out.println("The random distance is " + randomDist);
-            guesselt.getCity(guesselt.players, scanner, remoteServer);
-
+        Player winner = null;
+        int switcher = 1;
+        while (guesselt.winner == null) {
+            if (switcher%2 == 1) {
+                playDistance(random, guesselt, scanner, remoteServer);
+            } else {
+                playTemperature(random, guesselt, scanner, remoteServer);
+            }
             for (Player player : guesselt.players) {
                 System.out.println(player.getName() + ": " + player.getPlace1().getName() + " und " + player.getPlace2().getName());
                 System.out.println(player.getDiff());
                 RouteService.getRoute(player);
             }
+            switcher++;
             guesselt.setLightsNew();
             guesselt.setBackCities();
-
-            System.out.println("**********************\nGuess Temperature\n**********************\n");
-            int randomTemp = random.nextInt(19) + 1;
-            guesselt.actualValue = randomTemp;
-            System.out.println("The random temperature is " + randomTemp);
-            guesselt.getCity(guesselt.players, scanner, remoteServer);
-
-            for (Player player : guesselt.players) {
-                    System.out.println(player.getName() + ": " + player.getPlace1().getName() + " und " + player.getPlace2().getName());
-                    System.out.println(player.getDiff());
-                    guesselt.calcDiff(player);
-            }
-            guesselt.setLightsNew();
-            guesselt.setBackCities();
+            guesselt.absoluteWinner();
         }
-        Player winner = guesselt.absoluteWinner();
-        HueService.setWinnerLight(winner);
+        HueService.setWinnerLight(guesselt.winner);
+    }
+
+    private static void playTemperature(Random random, Guesselt guesselt, Scanner scanner, Remote remoteServer) {
+        System.out.println("**********************\nGuess Temperature\n**********************\n");
+        int randomTemp = random.nextInt(19) + 1;
+        guesselt.actualValue = randomTemp;
+        System.out.println("The random temperature is " + randomTemp);
+        guesselt.getCity(guesselt.players, scanner, remoteServer);
+    }
+
+    private static void playDistance(Random random, Guesselt guesselt, Scanner scanner, Remote remoteServer) {
+        System.out.println("**********************\nGuess Distance\n**********************\n");
+        int randomDist = random.nextInt(990) + 10;
+        System.out.println("The random distance is " + randomDist);
+        guesselt.getCity(guesselt.players, scanner, remoteServer);
     }
 
     private static void checkPlayerCount(String name, int num, Guesselt guesselt) {

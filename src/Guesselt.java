@@ -12,6 +12,7 @@ import java.util.Scanner;
 
 public class Guesselt {
     public int actualValue;
+    public Player winner;
     public List<Player> players = new LinkedList<Player>();
 
     /**
@@ -122,7 +123,20 @@ public class Guesselt {
         }
     }
 
-    public Player absoluteWinner() {
-        return null;
+    public void absoluteWinner() {
+        Player absWinner = null;
+        int count = 0;
+        for (Player player : players) {
+            if (player.getLives() == 0) {
+                 count++;
+            } else {
+                absWinner = player;
+            }
+        }
+        if (players.size() == 3 && count == 2) {
+            winner = absWinner;
+        } else if (players.size() == 2 && count == 1) {
+            winner = absWinner;
+        }
     }
 }

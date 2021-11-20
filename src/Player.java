@@ -1,5 +1,5 @@
 public class Player {
-    private int lives = 3;
+    private int lives = 1;
     private int id;
     private String name;
     private Place place1 = new Place("");
