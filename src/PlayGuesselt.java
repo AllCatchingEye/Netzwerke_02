@@ -10,29 +10,31 @@ public class PlayGuesselt {
         Guesselt guesselt = new Guesselt();
         HueService hue = new HueService();
         Scanner scanner = new Scanner(System.in);
-        String tmp = "";
-        int num = 1;
+        String input = "";
+        int numPlayers = 1;
         Remote remoteServer = new Remote();
         // Anmeldung der Spieler. Mindestens zwei und maximal drei.
-        while (tmp != null && guesselt.players.size() < 3) {
-            System.out.println("Do you want to play remote? (y/n): ");
+        while (input != null && guesselt.players.size() < 3) {
+            System.out.println("Do you want to play remote? (y/n) (q for quit): ");
             String wantRemote = scanner.nextLine();
             if (wantRemote.equals("n")) {
-                System.out.println("Type in new player name (nothing for finished): ");
-                tmp = scanner.nextLine();
-                if (!tmp.equals("")) {
-                    guesselt.players.add(new Player(tmp, num, false));
+                System.out.println("Type in new player name: ");
+                input = scanner.nextLine();
+                if (!input.equals("")) {
+                    guesselt.players.add(new Player(input, numPlayers, false));
                 }
-                num++;
+                numPlayers++;
+            } else if (wantRemote.equals("q")){
+                input = null;
             } else {
                 remoteServer.startServer();
                 Player remotePlayer = Remote.getPlayer();
-                remotePlayer.setId(num);
+                remotePlayer.setId(numPlayers);
                 guesselt.players.add(remotePlayer);
-                tmp = remotePlayer.getName();
-                num++;
+                input = remotePlayer.getName();
+                numPlayers++;
             }
-            checkPlayerCount(tmp, num, guesselt);
+            checkPlayerCount(input, numPlayers, guesselt);
         }
         // Schalte alle Lichter aus.
         for (int i = 1; i <= 3; i++) {
