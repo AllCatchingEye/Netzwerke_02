@@ -112,7 +112,8 @@ public class HueService {
                 //osw.write("\"on\": false");
                 osw.flush();
                 osw.close();
-                System.err.println(conn.getResponseCode());
+                conn.getResponseCode();
+                //System.err.println(conn.getResponseCode());
             } catch (IOException e) {
                 e.printStackTrace();
             }
