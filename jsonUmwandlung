@@ -1,3 +1,16 @@
+4.1a:
+    Vorteile:
+    - Json unterstützt Arrays
+    - Ist in JavaScript integriert/Basiert darauf
+    - Einfacher Lesbar
+
+    Nachteile:
+    - Kommentare sind Json nicht möglich
+    - Metadaten sind schwieriger zu Integrieren
+    - Json unterstützt nur UTF-8
+
+4.1b:
+
 {
     "course": {
         "name": [

@@ -44,6 +44,7 @@ public class PlayGuesselt {
         for (Player player: guesselt.players) {
             hue.setPlayerLight(player);
         }
+
         System.out.println("Let the game begin!");
         Random random = new Random();
         Player winner = null;
