@@ -16,12 +16,21 @@ public class PlayGuesselt {
         // Anmeldung der Spieler. Mindestens zwei und maximal drei.
         while (tmp != null && guesselt.players.size() < 3) {
             System.out.println("Do you want to play remote? (y/n): ");
-            String remote = scanner.nextLine();
-            if (remote.equals("n")) {
+            String wantRemote = scanner.nextLine();
+            if (wantRemote.equals("n")) {
                 System.out.println("Type in new player name (nothing for finished): ");
                 tmp = scanner.nextLine();
+                if (!tmp.equals("")) {
+                    guesselt.players.add(new Player(tmp, num, false));
+                }
+                num++;
             } else {
-                tmp = Remote.getPlayerName();
+                remoteServer.startServer();
+                Player remotePlayer = Remote.getPlayer();
+                remotePlayer.setId(num);
+                guesselt.players.add(remotePlayer);
+                tmp = remotePlayer.getName();
+                num++;
             }
             checkPlayerCount(tmp, num, guesselt);
         }
@@ -39,7 +48,7 @@ public class PlayGuesselt {
             System.out.println("**********************\nGuess Distance\n**********************\n");
             int randomDist = random.nextInt(990) + 10;
             System.out.println("The random distance is " + randomDist);
-            guesselt.getCity(guesselt.players, scanner);
+            guesselt.getCity(guesselt.players, scanner, remoteServer);
 
             for (Player player : guesselt.players) {
                 System.out.println(player.getName() + ": " + player.getPlace1().getName() + " und " + player.getPlace2().getName());
@@ -59,7 +68,6 @@ public class PlayGuesselt {
                     System.out.println(player.getName() + ": " + player.getPlace1().getName() + " und " + player.getPlace2().getName());
                     System.out.println(player.getDiff());
                     guesselt.calcDiff(player);
-                }
             }
             guesselt.setLightsNew();
             guesselt.setBackCities();
@@ -70,7 +78,6 @@ public class PlayGuesselt {
 
     private static void checkPlayerCount(String name, int num, Guesselt guesselt) {
         if (!name.equals("")) {
-            guesselt.players.add(new Player(name, num, false));
             System.out.println("Welcome " + name + "!");
             num++;
         } else {

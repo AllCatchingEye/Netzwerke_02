@@ -1,6 +1,18 @@
 package com.hueemulator.emulator;
 
-import java.awt.Color;
+import com.hueemulator.gui.View;
+import com.hueemulator.model.PHBridgeConfiguration;
+import com.hueemulator.model.PHLight;
+import com.hueemulator.model.PHLightState;
+import com.hueemulator.utils.OpenFileFilter;
+import com.hueemulator.utils.Utils;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+
+import javax.swing.*;
+import javax.swing.text.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -9,34 +21,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.swing.JEditorPane;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyleContext;
-
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-
-import com.hueemulator.gui.View;
-import com.hueemulator.model.PHBridgeConfiguration;
-import com.hueemulator.model.PHLight;
-import com.hueemulator.model.PHLightState;
-import com.hueemulator.utils.OpenFileFilter;
-import com.hueemulator.utils.Utils;
+import java.util.*;
 
 public class Controller {
  

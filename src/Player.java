@@ -13,6 +13,19 @@ public class Player {
         this.remote = remote;
     }
 
+    public Player(String name, boolean remote) {
+        this.name = name;
+        this.remote = remote;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public Place getPlace1() {
         return place1;
     }

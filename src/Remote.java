@@ -1,28 +1,40 @@
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Remote {
     private boolean initialised = false;
+    public static Player player;
 
     public void startServer() {
-        while (true) {
+        //while (true) {
             try (ServerSocket servSock = new ServerSocket(8082)) {
                 System.out.println("Server started, waiting for clients...");
                 try (Socket s = servSock.accept();
-                     BufferedReader fromClient = new BufferedReader(new InputStreamReader(s.getInputStream(), "UTF-8"));
-                     BufferedWriter toClient = new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), "UTF-8"))) {
+                     BufferedReader fromClient = new BufferedReader(new InputStreamReader(s.getInputStream(), StandardCharsets.UTF_8));
+                     BufferedWriter toClient = new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), StandardCharsets.UTF_8))) {
                     System.out.println("Got client connection!");
 
-                    if (initialised) {
-                        toClient.write("Type in your name: ");
+                    if (!initialised) {
+                        String forClient = "localhost:8082/name={NAME}\n" + "Type in your name!";
+                        toClient.write("HTTP/1.1 200 OK\r\n");
+                        toClient.write("Content-length: " + forClient.getBytes().length + "\r\n");
+                        toClient.write("\r\n");
+                        toClient.write(forClient);
                         toClient.flush();
+                        initialised = true;
                     } else {
-                        toClient.write("Type in your City");
+                        String forClient = "localhost:8082/place1={PLACE_1}&place2={PLACE_2}\n" + "Type in your cities!";
+                        toClient.write("HTTP/1.1 200 OK\r\n");
+                        toClient.write("Content-length: " + forClient.getBytes().length + "\r\n");
+                        toClient.write("\r\n");
+                        toClient.write(forClient);
                         toClient.flush();
                     }
 
-                    String RES = "";
                     for (String line = fromClient.readLine(); line != null
                             && line.length() > 0; line = fromClient.readLine()) {
                         if (line.contains("name")) {
@@ -45,16 +57,16 @@ public class Remote {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
 
     //}
 
-    public static String getPlayerName(){
-        return null;
+    public static Player getPlayer(){
+        return player;
     }
 
     public static String getPlace1(){

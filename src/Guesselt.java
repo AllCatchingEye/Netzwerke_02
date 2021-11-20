@@ -16,6 +16,7 @@ public class Guesselt {
 
     /**
      * Prueft ob ein Spieler keine Leben mehr hat.
+     *
      * @return true wenn ein Spieler keine Leben mehr hat, false sont.
      */
     public boolean someOneDead() {
@@ -29,24 +30,29 @@ public class Guesselt {
 
     /**
      * liest die gewaelten Staedte des Spielers ein
+     *
      * @param players Liste der Spieler.
      * @param scanner Scanner Objekt zum einlesen der Staedtenamen.
      */
-    public static void getCity(List<Player> players, Scanner scanner) {
+    public static void getCity(List<Player> players, Scanner scanner, Remote remoteServer) {
         for (Player player : players) {
-            System.out.println("It's your turn " + player.getName());
-            while (player.getPlace1().getName().equals("") || !WeatherService.existingCity(player.getPlace1())) {
-                System.out.println(player.getName() + " type in the first place:");
-                Place newCity = new Place(scanner.nextLine());
-                if (checkCityChosen(players, newCity)) {
-                    player.setPlace1(newCity);
+            if (player.getRemote()) {
+                remoteServer.startServer();
+            } else {
+                System.out.println("It's your turn " + player.getName());
+                while (player.getPlace1().getName().equals("") || !WeatherService.existingCity(player.getPlace1())) {
+                    System.out.println(player.getName() + " type in the first place:");
+                    Place newCity = new Place(scanner.nextLine());
+                    if (checkCityChosen(players, newCity)) {
+                        player.setPlace1(newCity);
+                    }
                 }
-            }
-            while (player.getPlace2().getName().equals("") || !WeatherService.existingCity(player.getPlace2())) {
-                System.out.println(player.getName() + " type in the second place:");
-                Place newCity = new Place(scanner.nextLine());
-                if (checkCityChosen(players, newCity)) {
-                    player.setPlace2(newCity);
+                while (player.getPlace2().getName().equals("") || !WeatherService.existingCity(player.getPlace2())) {
+                    System.out.println(player.getName() + " type in the second place:");
+                    Place newCity = new Place(scanner.nextLine());
+                    if (checkCityChosen(players, newCity)) {
+                        player.setPlace2(newCity);
+                    }
                 }
             }
         }
@@ -65,6 +71,7 @@ public class Guesselt {
 
     /**
      * Bestimmt den Rundengewinner
+     *
      * @return den Spieler, der gewonnen hat.
      */
     public Player checkPlayerForWin() {
