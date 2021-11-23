@@ -12,27 +12,27 @@ public class Remote {
     public void startServer() {
         //while (true) {
             try (ServerSocket servSock = new ServerSocket(8082)) {
-                System.out.println("Server started, waiting for clients...");
+                System.out.println("Remote Player has to send request");
                 try (Socket s = servSock.accept();
                      BufferedReader fromClient = new BufferedReader(new InputStreamReader(s.getInputStream(), StandardCharsets.UTF_8));
                      BufferedWriter toClient = new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), StandardCharsets.UTF_8))) {
                     System.out.println("Got client connection!");
 
                     if (!initialised) {
-                        String forClient = "localhost:8082/name={NAME}\n" + "Type in your name!";
+                        /*String forClient = "localhost:8082/name={NAME}\n" + "Type in your name!";
                         toClient.write("HTTP/1.1 200 OK\r\n");
                         toClient.write("Content-length: " + forClient.getBytes().length + "\r\n");
                         toClient.write("\r\n");
                         toClient.write(forClient);
-                        toClient.flush();
+                        toClient.flush();*/
                         initialised = true;
                     } else {
-                        String forClient = "localhost:8082/place1={PLACE_1}&place2={PLACE_2}\n" + "Type in your cities!";
+                        /*String forClient = "localhost:8082/place1={PLACE_1}&place2={PLACE_2}\n" + "Type in your cities!";
                         toClient.write("HTTP/1.1 200 OK\r\n");
                         toClient.write("Content-length: " + forClient.getBytes().length + "\r\n");
                         toClient.write("\r\n");
                         toClient.write(forClient);
-                        toClient.flush();
+                        toClient.flush();*/
                     }
 
                     for (String line = fromClient.readLine(); line != null

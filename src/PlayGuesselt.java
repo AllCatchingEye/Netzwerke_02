@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -7,6 +9,12 @@ public class PlayGuesselt {
      * @param args Argumente.
      */
     public static void main(String[] args) {
+        Process proc = null;
+        try {
+            proc = Runtime.getRuntime().exec("java -jar /Users/nicolaslerch/IdeaProjects/abgabe2-grp2-02/Hue-Emulator-master/HueEmulator-v0.8.jar");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Guesselt guesselt = new Guesselt();
         HueService hue = new HueService();
         Scanner scanner = new Scanner(System.in);
@@ -66,6 +74,11 @@ public class PlayGuesselt {
             guesselt.absoluteWinner();
         }
         HueService.setWinnerLight(guesselt.winner);
+        String end = scanner.nextLine();
+        if (end != null) {
+            proc.destroy();
+            System.exit(0);
+        }
     }
 
     private static void playTemperature(Random random, Guesselt guesselt, Scanner scanner, Remote remoteServer) {
