@@ -1,12 +1,13 @@
-import java.awt.*;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import javax.json.*;
-import java.io.*;
 
+/**
+ * Klasse zur Komunikation mit der HueBridge.
+ * @author Georg Lang, Nicolas Lerch.
+ * @version 24.11.2021.
+ */
 public class HueService {
     /*
     URL /api/<username>/lights
@@ -14,10 +15,17 @@ public class HueService {
     Version 1.0
     Permission Whitelist
      */
+    /**
+     * URL zur Kommunikation über API.
+     */
     //private static final String LIGHT_URL = "http://10.28.209.13:9001/api/3dc1d8f23e55321f3c049c03ac88dff/lights/";
     private static final String LIGHT_URL = "http://localhost:8000/api/newdeveloper/lights/";
 
-    public static JsonObject setPlayerLight(Player player) {
+    /**
+     * Setzt das Licht des jeweiligen Spilers in der passenden Farbe.
+     * @param player der Spieler.
+     */
+    public static void setPlayerLight(Player player) {
         String hueString = "\"hue\": ";
         switch (player.getLives()) {
             case 1 -> hueString += 0;
@@ -42,17 +50,16 @@ public class HueService {
             osw.close();
             //Aufruf von "conn.getResponseCode()" ist hier nötig keineAhnung warum?!
             String responseCode = String.valueOf(conn.getResponseCode());
-            //System.err.println(conn.getResponseCode());
-            /*try( JsonReader jsonRdr = Json.createReader( (InputStream) conn.getContent() ) ) {
-                return jsonRdr.readObject();
-            }*/
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
-    public static JsonObject allLightsOff(int index) {
+    /**
+     * Schaltet Lampen aus.
+     * @param index Index der Lampe.
+     */
+    public static void allLightsOff(int index) {
         try {
             HttpURLConnection conn = (HttpURLConnection) (new URL(LIGHT_URL + index + "/state")).openConnection();
             conn.setRequestMethod("PUT");
@@ -68,9 +75,13 @@ public class HueService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
+    /**
+     * Setzt das Licht des Verlierers ueber Klasse-Blinker.
+     * @param toSend Message.
+     * @param loser Spieler ohne Leben.
+     */
     public static void setLoserLight(String toSend, Player loser) {
         try {
             HttpURLConnection conn = (HttpURLConnection) (new URL(LIGHT_URL + loser.getId() + "/state")).openConnection();
@@ -89,6 +100,10 @@ public class HueService {
         }
     }
 
+    /**
+     * Setzt das Licht des Gewinners auf 'colorloop'.
+     * @param player Gewinner.
+     */
     public static void setWinnerLight(Player player) {
         if (player != null) {
             try {
@@ -99,8 +114,6 @@ public class HueService {
                 conn.setRequestProperty("Accept", "application/json");
                 OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());
                 osw.write("{\"on\":true,\"bri\":122,\"effect\":\"colorloop\"}");
-                //osw.write("{\"on\":true,\"bri\":122,\"hue\": 12000}");
-                //osw.write("\"on\": false");
                 osw.flush();
                 osw.close();
                 conn.getResponseCode();
@@ -111,6 +124,10 @@ public class HueService {
         }
     }
 
+    /**
+     * Main zum testen.
+     * @param args args.
+     */
     public static void main(String[] args) {
         HueService.setWinnerLight(new Player("Name", 1, false));
         HueService.setWinnerLight(new Player("Name", 2, false));
