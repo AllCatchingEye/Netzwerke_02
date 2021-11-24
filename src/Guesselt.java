@@ -1,24 +1,21 @@
-/**
- * Guesselt Programm.
- *
- * @author Georg Lang, Nicolas Lerch.
- * @version 11.11.2021.
- */
-
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
+
+/**
+ * Hauptklasse mit allen Methoden fuer eine Partie Guesselt.
+ * @author Georg Lang, Nicolas Lerch.
+ * @version 24.11.2021.
+ */
 
 public class Guesselt {
     public int actualValue;
     public Player winner;
-    public List<Player> players = new LinkedList<Player>();
+    public List<Player> players = new LinkedList<>();
 
     /**
      * Prueft ob ein Spieler keine Leben mehr hat.
-     *
-     * @return true wenn ein Spieler keine Leben mehr hat, false sont.
+     * @return true wenn ein Spieler keine Leben mehr hat, false sonst.
      */
     public boolean someOneDead() {
         for (Player person : players) {
@@ -30,12 +27,11 @@ public class Guesselt {
     }
 
     /**
-     * liest die gewaelten Staedte des Spielers ein
-     *
+     * liest die gewaelten Staedte des Spielers ein.
      * @param players Liste der Spieler.
      * @param scanner Scanner Objekt zum einlesen der Staedtenamen.
      */
-    public static void getCity(List<Player> players, Scanner scanner, Remote remoteServer) {
+    public void getCity(List<Player> players, Scanner scanner, Remote remoteServer) {
         for (Player player : players) {
             if (player.getRemote()) {
                 remoteServer.startServer();
@@ -59,6 +55,12 @@ public class Guesselt {
         }
     }
 
+    /**
+     * Prueft ob die gewaehlte Statd schon ein anderer Spieler ausgesucht hat.
+     * @param players alle Spieler.
+     * @param city neue ausgewaelthe Stadt.
+     * @return true falls die Stadt noch nicht belegt, sonst false.
+     */
     private static boolean checkCityChosen(List<Player> players, Place city) {
         for (Player player : players) {
             if (player.getPlace1().getName().equals(city.getName()) ||
@@ -71,12 +73,10 @@ public class Guesselt {
     }
 
     /**
-     * Bestimmt den Rundengewinner
-     *
+     * Bestimmt den Rundengewinner.
      * @return den Spieler, der gewonnen hat.
      */
     public Player checkPlayerForWin() {
-        double minDist = 0.0;
         for (Player person : players) {
             person.setPlace1(new Place(""));
             person.setPlace2(new Place(""));
@@ -101,6 +101,10 @@ public class Guesselt {
         return retPlayer;
     }
 
+    /**
+     * Berechnet die Differenz zwischen den Spieler-Orts-Paaren.
+     * @param player ein Spieler.
+     */
     public void calcDiff(Player player) {
         double temp1 = player.getPlace1().getTemp();
         double temp2 = player.getPlace2().getTemp();
@@ -108,6 +112,9 @@ public class Guesselt {
         player.setDiff(diff);
     }
 
+    /**
+     * Setzt die Staedte aller Spieler zurueck.
+     */
     public void setBackCities() {
         for (Player player : players) {
             player.getPlace1().setName("");
@@ -115,6 +122,9 @@ public class Guesselt {
         }
     }
 
+    /**
+     * Setzt die neue Lichtfarbe und gibt den Gewinner der aktuellen Spielrunde aus.
+     */
     public void setLightsNew() {
         Player winner = checkPlayerForWin();
         System.out.println("Congratulations " + winner.getName() + " you won this round!");
@@ -123,6 +133,9 @@ public class Guesselt {
         }
     }
 
+    /**
+     * Ermittelt den Gewinner des Spiels.
+     */
     public void absoluteWinner() {
         Player absWinner = null;
         int count = 0;
