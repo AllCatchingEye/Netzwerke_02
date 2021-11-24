@@ -1,22 +1,64 @@
+/**
+ * Klasse zum Speichern von Spielern mit zugehoereigen Daten.
+ * @author Georg Lang, Nicolas Lerch.
+ * @version 24.11.2021.
+ */
 public class Player {
-    private int lives = 1;
+    /**
+     * Anzahl Leben.
+     */
+    private int lives = 3;
+    /**
+     * ID-Nummer des Spielers.
+     */
     private int id;
+    /**
+     * Name des Spielers.
+     */
     private String name;
+    /**
+     * erster Ort des Spielers.
+     */
     private Place place1 = new Place("");
+    /**
+     * zweiter Ort des Spielers.
+     */
     private Place place2 = new Place("");
+    /**
+     * Differenzwert des Spielers, zur ermittlung eines Gewinners gespeichert.
+     */
     private double diff;
-    private boolean remote;
+    /**
+     * Information ob Spieler remote spielt.
+     */
+    private final boolean remote;
 
+    /**
+     * Konstruktor fuer einen Spieler
+     * @param name Name des Spielers.
+     * @param identifier ID-Nummer des Spielers.
+     * @param remote ist Spieler remote.
+     */
     public Player(String name, int identifier, boolean remote) {
         this.name = name;
         this.id = identifier;
         this.remote = remote;
     }
 
+    /**
+     * Konstruktor fuer einen Spieler
+     * @param name Name des Spielers.
+     * @param remote ist Spieler remote.
+     */
     public Player(String name, boolean remote) {
         this.name = name;
         this.remote = remote;
     }
+
+    /**
+     * Im Folgenden:
+     * Getter & Setter der Attribute.
+     */
 
     public void setId(int id) {
         this.id = id;

@@ -1,5 +1,5 @@
-import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -16,7 +16,6 @@ public class PlayGuesselt {
             e.printStackTrace();
         }
         Guesselt guesselt = new Guesselt();
-        HueService hue = new HueService();
         Scanner scanner = new Scanner(System.in);
         String input = "";
         int numPlayers = 1;
@@ -42,20 +41,19 @@ public class PlayGuesselt {
                 input = remotePlayer.getName();
                 numPlayers++;
             }
-            checkPlayerCount(input, numPlayers, guesselt);
+            checkPlayerCount(input, guesselt);
         }
         // Schalte alle Lichter aus.
         for (int i = 1; i <= 3; i++) {
-            hue.allLightsOff(i);
+            HueService.allLightsOff(i);
         }
         // Schalte Lichter fuer angemeldete Spieler ein
         for (Player player: guesselt.players) {
-            hue.setPlayerLight(player);
+            HueService.setPlayerLight(player);
         }
 
         System.out.println("Let the game begin!");
         Random random = new Random();
-        Player winner = null;
         int switcher = 1;
         while (guesselt.winner == null) {
             if (switcher%2 == 1) {
@@ -76,11 +74,18 @@ public class PlayGuesselt {
         HueService.setWinnerLight(guesselt.winner);
         String end = scanner.nextLine();
         if (end != null) {
-            proc.destroy();
+            Objects.requireNonNull(proc).destroy();
             System.exit(0);
         }
     }
 
+    /**
+     * Temperatur-Runde.
+     * @param random Random Obejekt.
+     * @param guesselt Guesselt Object mit Spieldaten.
+     * @param scanner Scanner Objekt.
+     * @param remoteServer Server fuer Infos vom Remote-Spieler.
+     */
     private static void playTemperature(Random random, Guesselt guesselt, Scanner scanner, Remote remoteServer) {
         System.out.println("**********************\nGuess Temperature\n**********************\n");
         int randomTemp = random.nextInt(19) + 1;
@@ -89,6 +94,13 @@ public class PlayGuesselt {
         guesselt.getCity(guesselt.players, scanner, remoteServer);
     }
 
+    /**
+     * Distanz-Runde.
+     * @param random Random Obejekt.
+     * @param guesselt Guesselt Object mit Spieldaten.
+     * @param scanner Scanner Objekt.
+     * @param remoteServer Server fuer Infos vom Remote-Spieler.
+     */
     private static void playDistance(Random random, Guesselt guesselt, Scanner scanner, Remote remoteServer) {
         System.out.println("**********************\nGuess Distance\n**********************\n");
         int randomDist = random.nextInt(990) + 10;
@@ -96,15 +108,17 @@ public class PlayGuesselt {
         guesselt.getCity(guesselt.players, scanner, remoteServer);
     }
 
-    private static void checkPlayerCount(String name, int num, Guesselt guesselt) {
+    /**
+     * Stellt sicher, dass mindestens zwei aber maximal drei Spieler beitreten.
+     * @param name Name des neuen Spielers.
+     * @param guesselt Guesselt Object mit Spieler-Liste.
+     */
+    private static void checkPlayerCount(String name, Guesselt guesselt) {
         if (name != null && !name.equals("")) {
             System.out.println("Welcome " + name + "!");
-            num++;
         } else {
             if (guesselt.players.size() < 2) {
                 System.out.println("There have to be minimum two players.");
-            } else {
-                name = null;
             }
         }
     }

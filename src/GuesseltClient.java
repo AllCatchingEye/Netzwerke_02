@@ -1,19 +1,31 @@
-import javax.json.JsonArray;
-import javax.json.JsonObject;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.Socket;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
+/**
+ * Klasse fuer einen RemmotePlayer zum Uebermitteln des Namens und der STaedte.
+ * @author Georg Lang, Nicolas Lerch.
+ * @version 24.11.2021.
+ */
 public class GuesseltClient {
+    /**
+     * Information ob das Spiel noch laeuft.
+     */
     private static boolean runningGame = true;
+    /**
+     * Information ob bereits ein Name abgefragt wurde.
+     */
     private static boolean initialised = false;
 
+    /**
+     * Oeffnet eine Verbindung zum Spiel und uebermittelt die benoetigten Daten.
+     * @param toSend Verbindungs URL.
+     * @return true wenn der Verbindungsaufbau positiv verlaufen ist, false sonst.
+     */
     private static boolean openConnection(String toSend) {
         System.out.println("trying connection...");
         boolean newRunningGame = true;
@@ -21,7 +33,7 @@ public class GuesseltClient {
         StringBuilder index = new StringBuilder();
         try {
             con = (HttpURLConnection) new URL(toSend).openConnection();
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8"))) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
                 for (String line = br.readLine(); line != null; line = br.readLine()) {
                     index.append(line);
                 }
@@ -32,6 +44,10 @@ public class GuesseltClient {
         return newRunningGame;
     }
 
+    /**
+     * Main zum testen.
+     * @param args args.
+     */
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("You are remote player. Wait your teammates to give you instruction.");

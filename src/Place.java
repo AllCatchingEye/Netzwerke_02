@@ -1,8 +1,30 @@
+/**
+ * Klasse zum Speichern von Orten mit zugehoereigen Daten.
+ * @author Georg Lang, Nicolas Lerch.
+ * @version 24.11.2021.
+ */
 public class Place {
+    /**
+     * Ortsname.
+     */
     private String name;
+    /**
+     * Breitengrad.
+     */
     private double lat;
+    /**
+     * Laengengrad.
+     */
     private double lon;
+    /**
+     * aktuelle Temperatur.
+     */
     private double temp;
+
+    /**
+     * Im Folgenden:
+     * Getter & Setter der Attribute.
+     */
 
     public double getTemp() {
         return temp;

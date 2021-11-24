@@ -5,10 +5,26 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Klasse um Informationen vvon Remote Spieler entgegenzunehmen.
+ * @author Georg Lang, Nicolas Lerch.
+ * @version 24.11.2021.
+ */
 public class Remote {
+    /**
+     * Information ob bereits ein Name uebergeben wurde.
+     */
     private boolean initialised = false;
+    /**
+     * der Spieler.
+     */
     public static Player player;
 
+    /**
+     * Oeffnet ein Serversocket um eine Verbindung des RemotePlayer zu akzeptieren und Daten zu empfangen.
+     * nimmt die Informationen entgegen und ordnet diese zu.
+     * TODO: Rest-API aktuell mit 'GET' -> falls zeit noch aendern zu PUT/PUSH.
+     */
     public void startServer() {
         //while (true) {
             try (ServerSocket servSock = new ServerSocket(8082)) {
@@ -65,19 +81,18 @@ public class Remote {
 
     //}
 
+    /**
+     * liefert den Spieler.
+     * @return den Spieler.
+     */
     public static Player getPlayer(){
         return player;
     }
 
-    public static String getPlace1(){
-        return getPlace1();
-    }
-
-    public static String getPlace2(){
-        return getPlace2();
-    }
-
-
+    /**
+     * Main zum testen.
+     * @param args args.
+     */
     public static void main(String[] args) {
         Remote remote = new Remote();
         remote.startServer();

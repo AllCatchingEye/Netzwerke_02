@@ -4,11 +4,16 @@ import javax.json.JsonObject;
 /**
  * Klasse fuer GeoServeice.
  * @author Georg Lang, Nicolas Lerch.
- * @version 11.11.2021.
+ * @version 24.11.2021.
  * API Key: API Key: jDBuS4GoWg4hNum0o5Jb25l5FDJTpd-S7Ku_MbYSPuY.
  */
+
 public class RouteService {
 
+    /**
+     * Ermittelt die Laenge der Route zwischen den Orten des Spielers.
+     * @param player der Spieler.
+     */
     public static void getRoute(Player player) {
         String origin = player.getPlace1().getLat() + "," + player.getPlace1().getLon();
         String destination = player.getPlace2().getLat() + "," + player.getPlace2().getLon();
@@ -32,26 +37,10 @@ public class RouteService {
         }
     }
 
-    public RouteService(){
-
-    }
-
-    /*public static void getCoordinates(Place place) {
-        String anfrage = "https://geocode.search.hereapi.com/v1/geocode?q=" + place.getName() + "&apiKey=jDBuS4GoWg4hNum0o5Jb25l5FDJTpd-S7Ku_MbYSPuY";
-        String response = """
-                key=items, val=[{"title":"M?nchen, Bayern, Deutschland","id":"here:cm:namedplace:20177269","resultType":"locality","localityType":"city",
-                "address":{"label":"M?nchen, Bayern, Deutschland","countryCode":"DEU","countryName":"Deutschland","stateCode":"BY","state":"Bayern",
-                "countyCode":"M","county":"M?nchen (Stadt)","city":"M?nchen","postalCode":"80331"},"position":{"lat":48.13641,"lng":11.57754},
-                "mapView":{"west":11.36084,"south":48.06175,"east":11.72291,"north":48.24824},
-                "scoring":{"queryScore":1.0,"fieldScore":{"city":1.0}}}]
-        """;
-        try {
-            JsonObject jsonObj = JsonObjectFromUrlUtil.getJsonObjectFromUrl(anfrage);
-        } catch (Exception e) {
-            System.out.println("Route Failure!");
-        }
-    }*/
-
+    /**
+     * Eine einfache Main zum testen.
+     * @param args args.
+     */
     public static void main(String[] args) {
         Player player =  new Player("Name", 1, false);
         player.setPlace1(new Place("Muenchen"));

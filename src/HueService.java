@@ -20,19 +20,10 @@ public class HueService {
     public static JsonObject setPlayerLight(Player player) {
         String hueString = "\"hue\": ";
         switch (player.getLives()) {
-            case 1: {
-                hueString += 0;
-                break;
-            }
-            case 2: {
-                hueString += 10000;
-                break;
-            }
-            case 3: {
-                hueString += 25000;
-                break;
-            }
-            default: {
+            case 1 -> hueString += 0;
+            case 2 -> hueString += 10000;
+            case 3 -> hueString += 25000;
+            default -> {
                 hueString += 0;
                 Blinker blinker = new Blinker(player);
                 blinker.start();
@@ -61,7 +52,7 @@ public class HueService {
         return null;
     }
 
-    public JsonObject allLightsOff(int index) {
+    public static JsonObject allLightsOff(int index) {
         try {
             HttpURLConnection conn = (HttpURLConnection) (new URL(LIGHT_URL + index + "/state")).openConnection();
             conn.setRequestMethod("PUT");
