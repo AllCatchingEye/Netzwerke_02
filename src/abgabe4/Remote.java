@@ -1,12 +1,12 @@
+package abgabe4;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
- * Klasse um Informationen vvon Remote Spieler entgegenzunehmen.
+ * Klasse um Informationen vvon abgabe4.Remote Spieler entgegenzunehmen.
  * @author Georg Lang, Nicolas Lerch.
  * @version 24.11.2021.
  */
@@ -28,27 +28,27 @@ public class Remote {
     public void startServer() {
         //while (true) {
             try (ServerSocket servSock = new ServerSocket(8082)) {
-                System.out.println("Remote Player has to send request");
+                System.out.println("abgabe4.Remote abgabe4.Player has to send request");
                 try (Socket s = servSock.accept();
                      BufferedReader fromClient = new BufferedReader(new InputStreamReader(s.getInputStream(), StandardCharsets.UTF_8));
                      BufferedWriter toClient = new BufferedWriter(new OutputStreamWriter(s.getOutputStream(), StandardCharsets.UTF_8))) {
                     System.out.println("Got client connection!");
 
                     if (!initialised) {
-                        /*String forClient = "localhost:8082/name={NAME}\n" + "Type in your name!";
+                        //String forClient = "localhost:8082/name={NAME}\n" + "Type in your name!";
                         toClient.write("HTTP/1.1 200 OK\r\n");
-                        toClient.write("Content-length: " + forClient.getBytes().length + "\r\n");
+                        //toClient.write("Content-length: " + forClient.getBytes().length + "\r\n");
                         toClient.write("\r\n");
-                        toClient.write(forClient);
-                        toClient.flush();*/
+                        //toClient.write(forClient);
+                        toClient.flush();
                         initialised = true;
                     } else {
-                        /*String forClient = "localhost:8082/place1={PLACE_1}&place2={PLACE_2}\n" + "Type in your cities!";
+                        //String forClient = "localhost:8082/place1={PLACE_1}&place2={PLACE_2}\n" + "Type in your cities!";
                         toClient.write("HTTP/1.1 200 OK\r\n");
-                        toClient.write("Content-length: " + forClient.getBytes().length + "\r\n");
+                        //toClient.write("Content-length: " + forClient.getBytes().length + "\r\n");
                         toClient.write("\r\n");
-                        toClient.write(forClient);
-                        toClient.flush();*/
+                        //toClient.write(forClient);
+                        toClient.flush();
                     }
 
                     for (String line = fromClient.readLine(); line != null

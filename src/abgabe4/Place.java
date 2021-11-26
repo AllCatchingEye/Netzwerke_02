@@ -1,3 +1,5 @@
+package abgabe4;
+
 /**
  * Klasse zum Speichern von Orten mit zugehoereigen Daten.
  * @author Georg Lang, Nicolas Lerch.

@@ -1,9 +1,11 @@
+package abgabe4;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
 /**
- * Hauptklasse mit allen Methoden fuer eine Partie Guesselt.
+ * Hauptklasse mit allen Methoden fuer eine Partie abgabe4.Guesselt.
  * @author Georg Lang, Nicolas Lerch.
  * @version 24.11.2021.
  */
@@ -33,7 +35,9 @@ public class Guesselt {
      */
     public void getCity(List<Player> players, Scanner scanner, Remote remoteServer) {
         for (Player player : players) {
-            if (player.getRemote()) {
+            if (player.getLives() == 0) {
+                System.out.println(player.getName() + " you have no lives.");
+            } else if (player.getRemote()) {
                 remoteServer.startServer();
             } else {
                 System.out.println("It's your turn " + player.getName());
@@ -126,8 +130,8 @@ public class Guesselt {
      * Setzt die neue Lichtfarbe und gibt den Gewinner der aktuellen Spielrunde aus.
      */
     public void setLightsNew() {
-        Player winner = checkPlayerForWin();
-        System.out.println("Congratulations " + winner.getName() + " you won this round!");
+        Player roundWinner = checkPlayerForWin();
+        System.out.println("Congratulations " + roundWinner.getName() + " you won this round!");
         for (Player player : players) {
             HueService.setPlayerLight(player);
         }
@@ -147,9 +151,9 @@ public class Guesselt {
             }
         }
         if (players.size() == 3 && count == 2) {
-            winner = absWinner;
+            this.winner = absWinner;
         } else if (players.size() == 2 && count == 1) {
-            winner = absWinner;
+            this.winner = absWinner;
         }
     }
 }

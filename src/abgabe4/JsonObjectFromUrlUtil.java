@@ -1,4 +1,4 @@
-/**
+package abgabe4; /**
  * Beispiel für die Nutzung von JsonObject
  * 
  * basierend auf

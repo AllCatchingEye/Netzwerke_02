@@ -1,5 +1,7 @@
+package abgabe4;
+
 /**
- * Klasse Blinker, fuer das Blinken der Spielerlampen.
+ * Klasse abgabe4.Blinker, fuer das Blinken der Spielerlampen.
  * @author Nicolas Lerch.
  * @version 24.11.2021.
  */
@@ -10,7 +12,7 @@ public class Blinker extends Thread{
     public Player player;
 
     /**
-     * Konstruktor fuer den Blinker.
+     * Konstruktor fuer den abgabe4.Blinker.
      * @param player Spieler ohne Leben
      */
     public Blinker(Player player) {
@@ -36,7 +38,7 @@ public class Blinker extends Thread{
     }
 
     /**
-     * Komunikation ueber den HueService.
+     * Komunikation ueber den abgabe4.HueService.
      * @param toSend Message.
      * @param player Spieler, dessen Lampe gesetzt werden soll.
      */

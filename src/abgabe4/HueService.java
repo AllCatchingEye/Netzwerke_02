@@ -1,3 +1,5 @@
+package abgabe4;
+
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -49,9 +51,12 @@ public class HueService {
             osw.flush();
             osw.close();
             //Aufruf von "conn.getResponseCode()" ist hier nötig keineAhnung warum?!
-            String responseCode = String.valueOf(conn.getResponseCode());
+            int responseCode = conn.getResponseCode(); //TODO: Fehlerbehandlung
+            if (responseCode != 200) {
+                System.out.println("abgabe4.HueService not reachable. Try to make a restart or check your network connection");
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("abgabe4.HueService not reachable. Try to make a restart or check your network connection");
         }
     }
 
@@ -70,15 +75,17 @@ public class HueService {
             osw.write("{\"on\": false}");
             osw.flush();
             osw.close();
-            String responseCode = String.valueOf(conn.getResponseCode());
-            //System.err.println(conn.getResponseCode());
+            int responseCode = conn.getResponseCode();
+            if (responseCode != 200) {
+                System.out.println("abgabe4.HueService not reachable. Try to make a restart or check your network connection");
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("abgabe4.HueService not reachable. Try to make a restart or check your network connection");
         }
     }
 
     /**
-     * Setzt das Licht des Verlierers ueber Klasse-Blinker.
+     * Setzt das Licht des Verlierers ueber Klasse-abgabe4.Blinker.
      * @param toSend Message.
      * @param loser Spieler ohne Leben.
      */
@@ -93,10 +100,12 @@ public class HueService {
             osw.write(toSend);
             osw.flush();
             osw.close();
-            String response = String.valueOf(conn.getResponseCode());
-            //System.err.println(conn.getResponseCode());
+            int responseCode = conn.getResponseCode();
+            if (responseCode != 200) {
+                System.out.println("abgabe4.HueService not reachable. Try to make a restart or check your network connection");
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("abgabe4.HueService not reachable. Try to make a restart or check your network connection");
         }
     }
 
@@ -116,10 +125,12 @@ public class HueService {
                 osw.write("{\"on\":true,\"bri\":122,\"effect\":\"colorloop\"}");
                 osw.flush();
                 osw.close();
-                conn.getResponseCode();
-                //System.err.println(conn.getResponseCode());
+                int responseCode = conn.getResponseCode();
+                if (responseCode != 200) {
+                    System.out.println("Your request was not successful, check your hue devices.");
+                }
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("abgabe4.HueService not reachable. Try to make a restart or check your network connection");
             }
         }
     }

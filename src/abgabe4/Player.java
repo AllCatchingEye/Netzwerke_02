@@ -1,3 +1,5 @@
+package abgabe4;
+
 /**
  * Klasse zum Speichern von Spielern mit zugehoereigen Daten.
  * @author Georg Lang, Nicolas Lerch.

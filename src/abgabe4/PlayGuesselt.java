@@ -1,3 +1,5 @@
+package abgabe4;
+
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Random;
@@ -82,9 +84,9 @@ public class PlayGuesselt {
     /**
      * Temperatur-Runde.
      * @param random Random Obejekt.
-     * @param guesselt Guesselt Object mit Spieldaten.
+     * @param guesselt abgabe4.Guesselt Object mit Spieldaten.
      * @param scanner Scanner Objekt.
-     * @param remoteServer Server fuer Infos vom Remote-Spieler.
+     * @param remoteServer Server fuer Infos vom abgabe4.Remote-Spieler.
      */
     private static void playTemperature(Random random, Guesselt guesselt, Scanner scanner, Remote remoteServer) {
         System.out.println("**********************\nGuess Temperature\n**********************\n");
@@ -97,9 +99,9 @@ public class PlayGuesselt {
     /**
      * Distanz-Runde.
      * @param random Random Obejekt.
-     * @param guesselt Guesselt Object mit Spieldaten.
+     * @param guesselt abgabe4.Guesselt Object mit Spieldaten.
      * @param scanner Scanner Objekt.
-     * @param remoteServer Server fuer Infos vom Remote-Spieler.
+     * @param remoteServer Server fuer Infos vom abgabe4.Remote-Spieler.
      */
     private static void playDistance(Random random, Guesselt guesselt, Scanner scanner, Remote remoteServer) {
         System.out.println("**********************\nGuess Distance\n**********************\n");
@@ -111,7 +113,7 @@ public class PlayGuesselt {
     /**
      * Stellt sicher, dass mindestens zwei aber maximal drei Spieler beitreten.
      * @param name Name des neuen Spielers.
-     * @param guesselt Guesselt Object mit Spieler-Liste.
+     * @param guesselt abgabe4.Guesselt Object mit Spieler-Liste.
      */
     private static void checkPlayerCount(String name, Guesselt guesselt) {
         if (name != null && !name.equals("")) {
