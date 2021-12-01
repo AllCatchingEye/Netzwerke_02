@@ -29,8 +29,8 @@ public class UDPSender implements Closeable {
     public static final int DESTPORT = UDPServer.RECEIVER_PORT;
     public static final String DESTHOST = "localhost";
     public static final int SENDTIME = 3000;
-    public static final int N = 1000;
-    public static final int K = 1000;
+    public static final int N = 100; // Nach 1000 packeten gibt es eine Verzoegerung
+    public static final int K = 100; // Verzoegerung in Millisekunden
     public static final String TCP = "TCP";
     public static final String UDP = "UDP";
     private DatagramSocket socket;
@@ -87,7 +87,7 @@ public class UDPSender implements Closeable {
                     count++;
                 } else {
                     try {
-                        System.out.println("Wait " + k + " seconds.");
+                        System.out.println("Wait " + N + " seconds.");
                         TimeUnit.MILLISECONDS.sleep(k);
                         num = 0;
                     } catch (InterruptedException e) {
@@ -135,7 +135,7 @@ public class UDPSender implements Closeable {
                     num++;
                 } else {
                     try {
-                        System.out.println("Wait " + k + " seconds.");
+                        System.out.println("Wait " + k + " milliseconds.");
                         TimeUnit.MILLISECONDS.sleep(k);
                         num = 0;
                     } catch (InterruptedException e) {
