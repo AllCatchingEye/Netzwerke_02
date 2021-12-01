@@ -1,22 +1,16 @@
 package abgabe6;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -26,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 public class UDPSender implements Closeable {
 
-    public static final int DESTPORT = UDPServer.RECEIVER_PORT;
+    public static final int DESTPORT = Server.RECEIVER_PORT;
     public static final String DESTHOST = "localhost";
     public static final int SENDTIME = 3000;
     public static final int N = 100; // Nach 1000 packeten gibt es eine Verzoegerung
