@@ -1,8 +1,6 @@
 package abgabe6;
 
-import java.io.ByteArrayInputStream;
 import java.io.Closeable;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -41,6 +39,8 @@ public class UDPServer extends Thread implements Closeable {
         }
         return true;
     }
+
+
 
     @Override
     public void close() throws IOException {
