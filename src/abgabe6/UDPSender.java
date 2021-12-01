@@ -4,12 +4,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -76,10 +81,13 @@ public class UDPSender implements Closeable {
             while (System.currentTimeMillis() - time < SENDTIME) {
                 if (num < N) {
                     sendSingleUdpPacket(destHost, destPort, bos.toByteArray());
+                    num++;
                     count++;
                 } else {
                     try {
+                        System.out.println("Wait " + k + " seconds.");
                         TimeUnit.MILLISECONDS.sleep(k);
+                        num = 0;
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -87,7 +95,7 @@ public class UDPSender implements Closeable {
             }
             long timeDiff = System.currentTimeMillis() - time;
             System.out.println(System.currentTimeMillis() - time + " Millisekunden sind vergangen.");
-            System.out.println(count + " Packete gesendet."); //TODO: ist der packetverlust logisch -> 0.03 Prozent
+            System.out.println(count + " Packete gesendet."); //TODO: ist der packetverlust logisch -> 0.03 Prozent ?
             System.out.println((double) count * 1400. / timeDiff / 10000 + " kB pro Millisekunde.");
         } catch (IOException e) {
             e.printStackTrace();
@@ -95,11 +103,55 @@ public class UDPSender implements Closeable {
 
     }
 
-    /*public void sendTextTCP(final String destHost, final int destPort, int N, int k) {
-        try(Socket socket = new Socket(destHost, destPort);
-            OutputStream out = socket.getOutputStream();
+    public void sendTextTCP(final String destHost, final int destPort, int N, int k) {
+        try(
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            DataOutputStream dos = new DataOutputStream(bos)) {
+            Path path = Paths.get("/Users/nicolaslerch/IdeaProjects/abgabe2-grp2-02/src/abgabe6/loremIpsum.txt");
+            String content = Files.readString(path, StandardCharsets.US_ASCII);
 
-    }*/
+            dos.writeBytes(content);
+            dos.flush();
+
+            long time = System.currentTimeMillis();
+            int count = 0;
+            int num = 0;
+            while (System.currentTimeMillis() - time < SENDTIME) {
+                if (num < N) {
+                    try (Socket s = new Socket(DESTHOST, DESTPORT)){
+                        try {
+                            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
+                            bw.write(content);
+                            bw.flush();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } catch (IOException e) {
+                        System.out.println("There is a Problem with the Server. Make sure it is online.");
+                    }
+                    count++;
+                    num++;
+                } else {
+                    try {
+                        System.out.println("Wait " + k + " seconds.");
+                        TimeUnit.MILLISECONDS.sleep(k);
+                        num = 0;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            long timeDiff = System.currentTimeMillis() - time;
+            System.out.println(System.currentTimeMillis() - time + " Millisekunden sind vergangen.");
+            System.out.println(count + " Packete gesendet."); //TODO: ist der packetverlust logisch -> 0.03 Prozent ?
+            System.out.println((double) count * 1400. / timeDiff / 10000 + " kB pro Millisekunde.");
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     @Override
     public void close() throws IOException {
@@ -111,13 +163,12 @@ public class UDPSender implements Closeable {
         try (UDPSender sender = new UDPSender()) {
             if (Protocol.equals(UDP)) {
                 sender.sendTextUDP(DESTHOST, DESTPORT, N, K);
-            } /*else {
+            } else {
                 sender.sendTextTCP(DESTHOST, DESTPORT, N, K);
-            }*/
+            }
         } catch (IOException e1) {
             System.err.println("IOException in Sender!");
             e1.printStackTrace();
         }
     }
-
 }

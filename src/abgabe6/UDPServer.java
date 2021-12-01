@@ -9,7 +9,7 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
-public class UDPServer implements Closeable {
+public class UDPServer extends Thread implements Closeable {
 
     public static final int RECEIVER_PORT = 4711; // < port where we listen for packets
     private static final int BUFFER_SIZE = 1400; // < maximum size of data to be received
