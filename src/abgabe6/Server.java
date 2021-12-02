@@ -90,9 +90,10 @@ public class Server {
 
         }
 
-        public boolean receiveString() {
-            try (Socket socket = new Socket(HOST, PORT)) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        public boolean receiveString(ServerSocket servSock) {
+            //FIXME hier Exception ???
+            try (Socket s = servSock.accept()) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
                 for (String line = br.readLine(); br.readLine() != null && line.length() > 0; line = br.readLine()) {
                     //System.out.println(line);
                 }
@@ -105,10 +106,10 @@ public class Server {
         @Override
         public void run() {
             while (!interrupted()) {
-                try {
+                try (ServerSocket ss = new ServerSocket(PORT)) {
                     long timeBegin = System.currentTimeMillis();
                     int count = -1;
-                    while (this.receiveString()) {
+                    while (this.receiveString(ss)) {
                         count++;
                     }
                     long timeEnd = System.currentTimeMillis();
@@ -131,7 +132,7 @@ public class Server {
         try (UDP udpServer = new UDP();
              TCP tcpServer = new TCP()) {
             udpServer.start();
-            //tcpServer.start();
+            tcpServer.start();
             while (true) {
 
             }

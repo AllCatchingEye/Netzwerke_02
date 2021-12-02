@@ -11,7 +11,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,6 +26,7 @@ public class UDPSender implements Closeable {
     public static final int K = 100; // Verzoegerung in Millisekunden
     public static final String TCP = "TCP";
     public static final String UDP = "UDP";
+    public static final String FILEPATH = "/Users/nicolaslerch/IdeaProjects/abgabe2-grp2-02/src/abgabe6/loremIpsum.txt";
     private DatagramSocket socket;
 
     UDPSender() throws SocketException {
@@ -65,7 +65,7 @@ public class UDPSender implements Closeable {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
              DataOutputStream dos = new DataOutputStream(bos)) {
 
-            Path path = Paths.get("/Users/nicolaslerch/IdeaProjects/abgabe2-grp2-02/src/abgabe6/loremIpsum.txt");
+            Path path = Paths.get(FILEPATH);
             String content = Files.readString(path, StandardCharsets.US_ASCII);
 
             dos.writeBytes(content);
@@ -99,11 +99,10 @@ public class UDPSender implements Closeable {
 
     }
 
-    public void sendTextTCP(final String destHost, final int destPort, int N, int k) {
-        try(
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            DataOutputStream dos = new DataOutputStream(bos)) {
-            Path path = Paths.get("/Users/nicolaslerch/IdeaProjects/abgabe2-grp2-02/src/abgabe6/loremIpsum.txt");
+    public void sendTextTCP(int N, int k) {
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                DataOutputStream dos = new DataOutputStream(bos)) {
+            Path path = Paths.get(FILEPATH);
             String content = Files.readString(path, StandardCharsets.US_ASCII);
 
             dos.writeBytes(content);
@@ -114,7 +113,7 @@ public class UDPSender implements Closeable {
             int num = 0;
             while (System.currentTimeMillis() - time < SENDTIME) {
                 if (num < N) {
-                    try (Socket s = new Socket(DESTHOST, DESTPORT)){
+                    try (Socket s = new Socket(DESTHOST, DESTPORT)) {
                         try {
                             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
                             bw.write(content);
@@ -141,8 +140,6 @@ public class UDPSender implements Closeable {
             System.out.println(System.currentTimeMillis() - time + " Millisekunden sind vergangen.");
             System.out.println(count + " Packete gesendet."); //TODO: ist der packetverlust logisch -> 0.03 Prozent ?
             System.out.println((double) count * 1400. / timeDiff / 10000 + " kB pro Millisekunde.");
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -155,16 +152,19 @@ public class UDPSender implements Closeable {
     }
 
     public static void main(String[] args) {
-        String Protocol = UDP;
-        try (UDPSender sender = new UDPSender()) {
-            if (Protocol.equals(UDP)) {
-                sender.sendTextUDP(DESTHOST, DESTPORT, N, K);
-            } else {
-                sender.sendTextTCP(DESTHOST, DESTPORT, N, K);
+        String Protocol = TCP;
+        for (int i = 0; i < 2; i++) {
+            try (UDPSender sender = new UDPSender()) {
+                if (Protocol.equals(UDP)) {
+                    sender.sendTextUDP(DESTHOST, DESTPORT, N, K);
+                } else {
+                    sender.sendTextTCP(N, K);
+                }
+            } catch (IOException e1) {
+                System.err.println("IOException in Sender!");
+                e1.printStackTrace();
             }
-        } catch (IOException e1) {
-            System.err.println("IOException in Sender!");
-            e1.printStackTrace();
+            Protocol = UDP;
         }
     }
 }
