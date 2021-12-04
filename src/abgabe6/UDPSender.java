@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 public class UDPSender implements Closeable {
 
-    public static final int DESTPORT = Server.RECEIVER_PORT;
+    public static final int DESTPORT = Server.RECEIVER_PORT_UDP;
     public static final String DESTHOST = "localhost";
     public static final int SENDTIME = 3000;
     public static final int N = 10; // Nach 1000 packeten gibt es eine Verzoegerung
@@ -42,7 +42,7 @@ public class UDPSender implements Closeable {
      */
     public void sendSingleUdpPacket(final String destHost, final int destPort, final byte[] dataToSend) {
         try {
-            DatagramPacket p = new DatagramPacket(dataToSend, 1400, InetAddress.getByName(destHost),
+            DatagramPacket p = new DatagramPacket(dataToSend, 800, InetAddress.getByName(destHost),
                     destPort);
             socket.send(p);
         } catch (IOException e) {
@@ -100,17 +100,17 @@ public class UDPSender implements Closeable {
     }
 
     public void sendTextTCP(int N, int k) {
+        int count = 0;
+        int num = 0;
+        long time = System.currentTimeMillis();
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                DataOutputStream dos = new DataOutputStream(bos)) {
+             DataOutputStream dos = new DataOutputStream(bos)) {
             Path path = Paths.get(FILEPATH);
             String content = Files.readString(path, StandardCharsets.US_ASCII);
 
-            long time = System.currentTimeMillis();
-            int count = 0;
-            int num = 0;
-            while (System.currentTimeMillis() - time < SENDTIME) {
-                if (num < N) {
-                    try (Socket s = new Socket(DESTHOST, DESTPORT)) {
+            if (num < N) {
+                try (Socket s = new Socket(DESTHOST, 4712)) {
+                    while (System.currentTimeMillis() - time < SENDTIME) {
                         try {
                             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
                             bw.write(content);
@@ -151,8 +151,8 @@ public class UDPSender implements Closeable {
     }
 
     public static void main(String[] args) {
-        String Protocol = TCP;
-        for (int i = 0; i < 2; i++) {
+        String Protocol = UDP;
+        for (int i = 0; i < 1; i++) {
             try (UDPSender sender = new UDPSender()) {
                 if (Protocol.equals(UDP)) {
                     sender.sendTextUDP(DESTHOST, DESTPORT, N, K);
@@ -163,7 +163,7 @@ public class UDPSender implements Closeable {
                 System.err.println("IOException in Sender!");
                 e1.printStackTrace();
             }
-            Protocol = UDP;
+            Protocol = TCP;
         }
     }
 }

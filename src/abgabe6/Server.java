@@ -14,7 +14,8 @@ import java.util.Arrays;
 
 public class Server {
 
-    public static final int RECEIVER_PORT = 4711; // < port where we listen for packets
+    public static final int RECEIVER_PORT_UDP = 4711; // < port where we listen for packets
+    public static final int RECEIVER_PORT_TCP = 4712;
     private static final int BUFFER_SIZE = 1400; // < maximum size of data to be received
     private static final int TIMEOUT = 1000; // < timeout for receiving int and double value
 
@@ -26,7 +27,7 @@ public class Server {
         private final DatagramSocket socket;
 
         UDP() throws SocketException {
-            socket = new DatagramSocket(RECEIVER_PORT);
+            socket = new DatagramSocket(RECEIVER_PORT_UDP);
         }
 
         @Override
@@ -37,22 +38,24 @@ public class Server {
         /**
          * Receive a single UDP packet containing a string and print it.
          */
-        public boolean receiveString(int timeToWait) {
+        public int receiveString(int timeToWait) {
+            int len = 0;
             DatagramPacket p = new DatagramPacket(new byte[BUFFER_SIZE], BUFFER_SIZE);
             try {
                 socket.setSoTimeout(timeToWait);
                 socket.receive(p);
-
+                String string = new String(p.getData());
+                len = string.getBytes(StandardCharsets.UTF_8).length;
                 //System.out.println("Received a packet from client " + p.getAddress().getHostAddress() + " port " + p.getPort());
                 //System.out.println("String: " + new String(p.getData()));
             } catch (SocketTimeoutException te) {
+                return -1;
                 //System.out.println("Nothing received - timeout occured after " + timeToWait + " ms.");
-                return false;
             } catch (IOException e) {
                 System.err.println("Error occured while receiving a packet.");
                 e.printStackTrace();
             }
-            return true;
+            return len;
         }
 
         @Override
@@ -69,7 +72,7 @@ public class Server {
                     }
                     long timeEnd = System.currentTimeMillis();
                     long timeDiff = timeEnd - timeBegin - TIMEOUT;
-                    if (count != -1) {
+                    if (len != -1) {
                         System.out.println("UDP Connection.");
                         System.out.println(timeDiff + " Millisekunden sind vergangen.");
                         System.out.println(len + " Bytes empfangen.");
@@ -92,7 +95,6 @@ public class Server {
 
         @Override
         public void close() {
-
         }
 
         @Override
@@ -131,7 +133,8 @@ public class Server {
             tcpServer.join();
             udpServer.join();
         } catch (Exception e) {
-            System.out.println("Fehler.");
+            System.out.println("Fehler in main.");
+            e.printStackTrace();
         }
     }
 }
