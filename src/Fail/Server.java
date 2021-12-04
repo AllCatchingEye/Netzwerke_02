@@ -1,8 +1,11 @@
-package abgabe6;
+package Fail;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
@@ -10,7 +13,6 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 public class Server {
 
@@ -18,6 +20,8 @@ public class Server {
     public static final int RECEIVER_PORT_TCP = 4712;
     private static final int BUFFER_SIZE = 1400; // < maximum size of data to be received
     private static final int TIMEOUT = 1000; // < timeout for receiving int and double value
+    private static final String UDPMESSUNG = "UDP_1000_0.txt";
+    private static final String TCPMESSUNG = "TCP_1000_0.txt";
 
     /**
      * UDP Klasse.
@@ -38,7 +42,7 @@ public class Server {
         /**
          * Receive a single UDP packet containing a string and print it.
          */
-        public int receiveString(int timeToWait) {
+        public double receiveString(int timeToWait) {
             int len = 0;
             DatagramPacket p = new DatagramPacket(new byte[BUFFER_SIZE], BUFFER_SIZE);
             try {
@@ -46,16 +50,13 @@ public class Server {
                 socket.receive(p);
                 String string = new String(p.getData());
                 len = string.getBytes(StandardCharsets.UTF_8).length;
-                //System.out.println("Received a packet from client " + p.getAddress().getHostAddress() + " port " + p.getPort());
-                //System.out.println("String: " + new String(p.getData()));
             } catch (SocketTimeoutException te) {
                 return -1;
-                //System.out.println("Nothing received - timeout occured after " + timeToWait + " ms.");
             } catch (IOException e) {
                 System.err.println("Error occured while receiving a packet.");
                 e.printStackTrace();
             }
-            return len;
+            return len/1000.;
         }
 
         @Override
@@ -63,20 +64,23 @@ public class Server {
             while (!interrupted()) {
                 try {
                     long timeBegin = System.currentTimeMillis();
-                    int len = 0;
-                    int tmp = 0;
+                    double lenTotal = 0;
+                    double tmp = 0;
                     while (tmp != -1){
                         tmp = this.receiveString(TIMEOUT);
-                        len += tmp;
-                        //System.out.println("Length of this package: " + tmp);
+                        lenTotal += tmp;
                     }
                     long timeEnd = System.currentTimeMillis();
                     long timeDiff = timeEnd - timeBegin - TIMEOUT;
-                    if (len != -1) {
+                    if (lenTotal != -1) {
                         System.out.println("UDP Connection.");
                         System.out.println(timeDiff + " Millisekunden sind vergangen.");
-                        System.out.println(len + " Bytes empfangen.");
-                        System.out.println((double) len/timeDiff/1000+ " kB pro Sekunde.");
+                        System.out.println(lenTotal + " kB empfangen.");
+                        double str = lenTotal/timeDiff;
+                        System.out.println(str);
+                        PrintWriter writer = new PrintWriter(new FileWriter(UDPMESSUNG, true));
+                        writer.append(str + "\n");
+                        writer.close();
                     }
                 } catch (Exception e) {
                     System.err.println("IOException in Receiver!");
@@ -102,16 +106,26 @@ public class Server {
             while (!interrupted()){
                 try (ServerSocket servSock = new ServerSocket(RECEIVER_PORT_TCP)) {
                     try (Socket s = servSock.accept();
-                         BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()))) {
+                         BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
+                         DataInputStream dis = new DataInputStream(s.getInputStream());) {
                         System.out.println("Got Client connection.");
                         long timeBegin = System.currentTimeMillis();
                         StringBuilder content = new StringBuilder();
-                        for (String line = br.readLine(); line != null
-                                && line.length() > 0; line = br.readLine()) {
-                            content.append(line);
-                        }
-                        int size = content.toString().getBytes(StandardCharsets.UTF_8).length;
-                        System.out.println("The size of the package was: " + size);
+
+//                        for (String line = br.readLine(); line != null
+//                                && line.length() > 0; line = br.readLine()) {
+//                            String receivedString = line;
+//                            System.out.println(receivedString);
+//                            content.append(receivedString);
+//                        }
+                        System.out.println("DataInpuStream: " + dis.readAllBytes());
+                        String test = dis.readUTF();
+                        System.out.println(test);
+                        int size = test.getBytes(StandardCharsets.UTF_8).length;
+                        //int size = dis.readAllBytes().length;
+                        System.out.println("Size: " + size);
+                        //int size = content.toString().getBytes(StandardCharsets.UTF_8).length;
+
                         long timeEnd = System.currentTimeMillis();
                         long timeDiff = timeEnd - timeBegin;
                         System.out.println("TCP Connection.");
