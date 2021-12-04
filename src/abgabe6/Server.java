@@ -9,6 +9,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class Server {
 
@@ -58,17 +60,20 @@ public class Server {
             while (!interrupted()) {
                 try {
                     long timeBegin = System.currentTimeMillis();
-                    int count = -1;
-                    while (this.receiveString(TIMEOUT)) {
-                        count++;
+                    int len = 0;
+                    int tmp = 0;
+                    while (tmp != -1){
+                        tmp = this.receiveString(TIMEOUT);
+                        len += tmp;
+                        //System.out.println("Length of this package: " + tmp);
                     }
                     long timeEnd = System.currentTimeMillis();
                     long timeDiff = timeEnd - timeBegin - TIMEOUT;
                     if (count != -1) {
                         System.out.println("UDP Connection.");
                         System.out.println(timeDiff + " Millisekunden sind vergangen.");
-                        System.out.println(count + " Packete empfangen.");
-                        System.out.println((double) count * 1400. / timeDiff / 10000 + " kB pro Millisekunde.");
+                        System.out.println(len + " Bytes empfangen.");
+                        System.out.println((double) len/timeDiff/1000+ " kB pro Sekunde.");
                     }
                 } catch (Exception e) {
                     System.err.println("IOException in Receiver!");
@@ -84,45 +89,34 @@ public class Server {
     public static class TCP extends Thread implements AutoCloseable {
 
         final String HOST = "localhost";
-        final int PORT = 4711;
 
         @Override
         public void close() {
 
         }
 
-        public boolean receiveString(ServerSocket servSock) {
-            //FIXME hier Exception ???
-            try (Socket s = servSock.accept()) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-                for (String line = br.readLine(); br.readLine() != null && line.length() > 0; line = br.readLine()) {
-                    //System.out.println(line);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return true;
-        }
-
         @Override
         public void run() {
-            while (!interrupted()) {
-                try (ServerSocket ss = new ServerSocket(PORT)) {
-                    long timeBegin = System.currentTimeMillis();
-                    int count = -1;
-                    while (this.receiveString(ss)) {
-                        count++;
-                    }
-                    long timeEnd = System.currentTimeMillis();
-                    long timeDiff = timeEnd - timeBegin - TIMEOUT;
-                    if (count != -1) {
+            while (!interrupted()){
+                try (ServerSocket servSock = new ServerSocket(RECEIVER_PORT_TCP)) {
+                    try (Socket s = servSock.accept();
+                         BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()))) {
+                        System.out.println("Got Client connection.");
+                        long timeBegin = System.currentTimeMillis();
+                        StringBuilder content = new StringBuilder();
+                        for (String line = br.readLine(); line != null
+                                && line.length() > 0; line = br.readLine()) {
+                            content.append(line);
+                        }
+                        int size = content.toString().getBytes(StandardCharsets.UTF_8).length;
+                        System.out.println("The size of the package was: " + size);
+                        long timeEnd = System.currentTimeMillis();
+                        long timeDiff = timeEnd - timeBegin;
                         System.out.println("TCP Connection.");
                         System.out.println(timeDiff + " Millisekunden sind vergangen.");
-                        System.out.println(count + " Packete empfangen.");
-                        System.out.println((double) count * 1400. / timeDiff / 10000 + " kB pro Millisekunde.");
+                        System.out.println((double) size / timeDiff / 1024 + " kB pro Sekunde.");
                     }
-                } catch (Exception e) {
-                    System.err.println("IOException in Receiver!");
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -132,11 +126,10 @@ public class Server {
     public static void main(String[] args) {
         try (UDP udpServer = new UDP();
              TCP tcpServer = new TCP()) {
-            udpServer.start();
             tcpServer.start();
-            while (true) {
-
-            }
+            udpServer.start();
+            tcpServer.join();
+            udpServer.join();
         } catch (Exception e) {
             System.out.println("Fehler.");
         }

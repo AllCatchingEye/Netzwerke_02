@@ -22,12 +22,12 @@ public class UDPSender implements Closeable {
     public static final int DESTPORT = Server.RECEIVER_PORT;
     public static final String DESTHOST = "localhost";
     public static final int SENDTIME = 3000;
-    public static final int N = 100; // Nach 1000 packeten gibt es eine Verzoegerung
-    public static final int K = 100; // Verzoegerung in Millisekunden
+    public static final int N = 10; // Nach 1000 packeten gibt es eine Verzoegerung
+    public static final int K = 1000; // Verzoegerung in Millisekunden
     public static final String TCP = "TCP";
     public static final String UDP = "UDP";
-    public static final String FILEPATH = "/Users/nicolaslerch/IdeaProjects/abgabe2-grp2-02/src/abgabe6/loremIpsum.txt";
-    private DatagramSocket socket;
+    public static final String FILEPATH = "C:\\Users\\Kicos\\IdeaProjects\\abgabe2-grp2-02\\src\\abgabe6\\loremIpsum.txt";
+    private final DatagramSocket socket;
 
     UDPSender() throws SocketException {
         socket = new DatagramSocket();
@@ -92,7 +92,7 @@ public class UDPSender implements Closeable {
             long timeDiff = System.currentTimeMillis() - time;
             System.out.println(System.currentTimeMillis() - time + " Millisekunden sind vergangen.");
             System.out.println(count + " Packete gesendet."); //TODO: ist der packetverlust logisch -> 0.03 Prozent ?
-            System.out.println((double) count * 1400. / timeDiff / 10000 + " kB pro Millisekunde.");
+            System.out.println((double) count * 1400. / timeDiff / 10000 + " kB pro Sekunde.");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -105,9 +105,6 @@ public class UDPSender implements Closeable {
             Path path = Paths.get(FILEPATH);
             String content = Files.readString(path, StandardCharsets.US_ASCII);
 
-            dos.writeBytes(content);
-            dos.flush();
-
             long time = System.currentTimeMillis();
             int count = 0;
             int num = 0;
@@ -118,33 +115,35 @@ public class UDPSender implements Closeable {
                             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()));
                             bw.write(content);
                             bw.flush();
+                            System.out.println("TCP gesendet");
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                    } catch (IOException e) {
-                        System.out.println("There is a Problem with the Server. Make sure it is online.");
+                        count++;
+                        num++;
                     }
-                    count++;
-                    num++;
-                } else {
-                    try {
-                        System.out.println("Wait " + k + " milliseconds.");
-                        TimeUnit.MILLISECONDS.sleep(k);
-                        num = 0;
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                } catch (IOException e) {
+                    System.out.println("There is a Problem with the Server. Make sure it is online.");
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    System.out.println("Wait " + k + " milliseconds.");
+                    TimeUnit.MILLISECONDS.sleep(k);
+                    num = 0;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
-            long timeDiff = System.currentTimeMillis() - time;
-            System.out.println(System.currentTimeMillis() - time + " Millisekunden sind vergangen.");
-            System.out.println(count + " Packete gesendet."); //TODO: ist der packetverlust logisch -> 0.03 Prozent ?
-            System.out.println((double) count * 1400. / timeDiff / 10000 + " kB pro Millisekunde.");
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
         }
-
+        long timeDiff = System.currentTimeMillis() - time;
+        System.out.println(System.currentTimeMillis() - time + " Millisekunden sind vergangen.");
+        System.out.println(count + " Packete gesendet."); //TODO: ist der packetverlust logisch -> 0.03 Prozent ?
+        System.out.println((double) count * 1400. / timeDiff / 10000 + " kB pro Sekunde.");
     }
+
 
     @Override
     public void close() throws IOException {
