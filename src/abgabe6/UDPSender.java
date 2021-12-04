@@ -140,7 +140,7 @@ public class UDPSender implements Closeable {
         }
         long timeDiff = System.currentTimeMillis() - time;
         System.out.println(System.currentTimeMillis() - time + " Millisekunden sind vergangen.");
-        System.out.println(count + " Packete gesendet."); //TODO: ist der packetverlust logisch -> 0.03 Prozent ?
+        System.out.println(count + " Packete gesendet.");
         System.out.println((double) count * 1400. / timeDiff / 10000 + " kB pro Sekunde.");
     }
 
