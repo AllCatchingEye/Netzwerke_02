@@ -128,9 +128,11 @@ public class Server {
 
                         long timeEnd = System.currentTimeMillis();
                         long timeDiff = timeEnd - timeBegin;
+                        double str = ((double)size) / timeDiff / 1000.;
                         System.out.println("TCP Connection.");
-                        System.out.println(timeDiff + " Millisekunden sind vergangen.");
-                        System.out.println((double) size / timeDiff / 1024 + " kB pro Sekunde.");
+                        PrintWriter writer = new PrintWriter(new FileWriter(TCPMESSUNG, true));
+                        writer.append(str + "\n");
+                        writer.close();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
