@@ -15,9 +15,9 @@ public class SenderNew {
     private static final int N = 100;
 
     public static void main(String[] args) {
-        new SenderNew().sendTCPPacket();
+        //new SenderNew().sendTCPPacket();
 
-/*        int num = 0;
+        int num = 0;
         while (num < 5){
             new SenderNew().sendUDPPacket();
             try{
@@ -27,7 +27,7 @@ public class SenderNew {
             }
             num++;
             System.out.println("Paketnr: " + num);
-        }*/
+        }
     }
 
     private void sendTCPPacket() {
