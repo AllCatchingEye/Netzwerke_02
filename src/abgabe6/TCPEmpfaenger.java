@@ -1,20 +1,13 @@
 package abgabe6;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.Time;
+import java.nio.charset.StandardCharsets;
 
 public class TCPEmpfaenger {
 
     private final int TIMEOUT = 1000;
-    private long timeBegin;
-    private long timeEnd;
 
     public static void main(String[] args) {
         new TCPEmpfaenger().startTCPEmpfaenger();
@@ -22,23 +15,36 @@ public class TCPEmpfaenger {
 
     private void startTCPEmpfaenger() {
         try (ServerSocket servSock = new ServerSocket(4712)) {
+
             System.out.println("Waiting for clients...");
-            try (Socket s = servSock.accept()) {
-                try (DataInputStream dis = new DataInputStream(s.getInputStream());
-                     BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-                     BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(s.getOutputStream()))){
-                    System.out.println("Got tcp connection.");
+            while (true) {
+                try (Socket s = servSock.accept()) {
+                    long timeStart = System.currentTimeMillis();
+                    StringBuilder stringBuilder = new StringBuilder();
+                    try (BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()))) {
+                        for (String line = br.readLine(); line != null && line.length() > 0; line = br.readLine()){
+                            stringBuilder.append(line);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-                    //byte bytesReceived = dis.readFully();
-                    System.out.println(br.readLine());
-
-                    bw.write("Bytes erhalten");
-                    bw.flush();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    int size = stringBuilder.toString().getBytes(StandardCharsets.UTF_8).length;
+                    long timeEnd = System.currentTimeMillis();
+                    long timeDiff = timeEnd - timeStart;
+                    double kB_Goodput = (double) size / timeDiff / 1000;
+                    System.out.println("The goodput was: " + kB_Goodput + "kB");
+                    try {
+                        PrintWriter writer = new PrintWriter(new FileWriter("TCP_5sekunden.txt", true));
+                        writer.append(kB_Goodput + "\n");
+                        writer.close();
+                    } catch (IOException e){
+                        e.printStackTrace();
+                    }
                 }
-                System.out.println(timeEnd - timeBegin);
             }
+
+            //long dataSize = data.toString().getBytes().length;
         } catch (IOException e) {
             e.printStackTrace();
         }
