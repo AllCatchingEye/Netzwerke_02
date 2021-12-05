@@ -9,15 +9,16 @@ import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
 
 public class SenderNew {
-    public static final String FILEPATH = "C:\\Users\\Kicos\\IdeaProjects\\abgabe2-grp2-02\\src\\Fail\\loremIpsum.txt";
-    public static final String FILEPATH_TCP = "C:\\Users\\Kicos\\IdeaProjects\\abgabe2-grp2-02\\src\\Fail\\loremIpsumTCP.txt";
+    public static final String FILEPATH = "/Users/nicolaslerch/IdeaProjects/abgabe2-grp2-02/src/abgabe6/loremIpsum.txt";
+    public static final String FILEPATH_TCP = "/Users/nicolaslerch/IdeaProjects/abgabe2-grp2-02/src/abgabe6/loremIpsumTCP.txt";
     private static final int k = 100;
     private static final int N = 100;
+    private static final String TARGETHOST = "localhost";
 
     public static void main(String[] args) {
-        new SenderNew().sendTCPPacket();
+        //new SenderNew().sendTCPPacket();
 
-/*        int num = 0;
+        int num = 0;
         while (num < 5){
             new SenderNew().sendUDPPacket();
             try{
@@ -27,7 +28,7 @@ public class SenderNew {
             }
             num++;
             System.out.println("Paketnr: " + num);
-        }*/
+        }
     }
 
     private void sendTCPPacket() {
@@ -36,7 +37,7 @@ public class SenderNew {
 
         int messagesToSent = 5;
         while(messagesToSent > 0){
-            try (Socket socket = new Socket("localhost", 4712)) {
+            try (Socket socket = new Socket(TARGETHOST, 4712)) {
                 try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
                     Path path = Paths.get(FILEPATH_TCP);
                     String content = Files.readString(path, StandardCharsets.US_ASCII);
@@ -112,7 +113,7 @@ public class SenderNew {
             byte[] data = initData();
 
             DatagramSocket socket = new DatagramSocket();
-            DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getByName("localhost"), 4711);
+            DatagramPacket p = new DatagramPacket(data, data.length, InetAddress.getByName(TARGETHOST), 4711);
             socket.send(p);
             socket.close();
             timesSent++;
