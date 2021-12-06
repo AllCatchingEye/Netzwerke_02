@@ -6,63 +6,77 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class SenderNew {
-    public static final String FILEPATH = "/Users/nicolaslerch/IdeaProjects/abgabe2-grp2-02/src/abgabe6/loremIpsum.txt";
-    public static final String FILEPATH_TCP = "/Users/nicolaslerch/IdeaProjects/abgabe2-grp2-02/src/abgabe6/loremIpsumTCP.txt";
+    public static final String FILEPATH = "./loremIpsum.txt";
+    public static final String FILEPATH_TCP = "./loremIpsumTCP.txt";
     private static final int k = 100;
     private static final int N = 100;
     private static final String TARGETHOST = "localhost";
 
     public static void main(String[] args) {
-        //new SenderNew().sendTCPPacket();
-
+        String protocol = "TCP";
         int num = 0;
-        while (num < 5){
-            new SenderNew().sendUDPPacket();
-            try{
-                TimeUnit.MILLISECONDS.sleep(1200);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        while (num < 10){
+            SenderNew senderNew = new SenderNew();
+            senderNew.chooseProtocol(protocol);
+            senderNew.delay(1500);
             num++;
-            System.out.println("Paketnr: " + num);
+            System.out.println("Messagenr: : " + num);
         }
     }
 
-    private void sendTCPPacket() {
-        int messageSize = 0;
-        long timeStart = System.currentTimeMillis();
+    private void chooseProtocol(String protocol){
+        SenderNew senderNew = new SenderNew();
+        if(Objects.equals(protocol, "TCP"))
+            senderNew.sendTCP();
+        else if(Objects.equals(protocol, "UDP"))
+            senderNew.sendUDPPacket();
+        else
+            System.out.println("Unknown Protocol.");
+    }
 
-        int messagesToSent = 5;
-        while(messagesToSent > 0){
-            try (Socket socket = new Socket(TARGETHOST, 4712)) {
+    private void sendTCP() {
+
+        long sendingTime = System.currentTimeMillis() + 3000;
+        int packageCount = 0;
+
+        String message = "a".repeat(10) + "\n";
+
+        while(System.currentTimeMillis() < sendingTime){
+            if(packageCount % N == 0){
+                delay(k);
+            }
+
+            try (Socket socket = new Socket(TARGETHOST, 8010)) {
                 try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
-                    Path path = Paths.get(FILEPATH_TCP);
-                    String content = Files.readString(path, StandardCharsets.US_ASCII);
-                    messageSize = content.getBytes(StandardCharsets.UTF_8).length;
-                    bw.write(content);
+                    bw.write(message);
                     bw.flush();
+
+                    packageCount++;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
 
-            long timeEnd = System.currentTimeMillis();
-            long timeDiff = timeEnd - timeStart;
-            System.out.println("Size of message sent: " + messageSize);
-            double kB_Goodput = (double) messageSize / timeDiff / 1000;
-            System.out.println("The goodput was " + kB_Goodput +"kB");
+        int data = packageCount * message.getBytes().length;
+        double goodPut = (double) data / sendingTime;
 
-            try {
-                PrintWriter writer = new PrintWriter(new FileWriter("TCP_sender_5s.txt", true));
-                writer.append(kB_Goodput + "\n");
-                writer.close();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-            messagesToSent--;
+        System.out.println("Size of message sent: " + data);
+        System.out.println("The goodput was: " + goodPut +"kB/s");
+
+        writeResults(goodPut, "TCP_Ergebnisse.txt");
+    }
+
+
+    private void delay(int delay){
+        try{
+            TimeUnit.MILLISECONDS.sleep(delay);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -94,18 +108,12 @@ public class SenderNew {
 
         long timeDiff = System.currentTimeMillis() - timeStart;
         int size = timesSent * 1400;
-        double goodput = (double) size / timeDiff / 1000;
-        try {
-            PrintWriter writer = new PrintWriter(new FileWriter("UDP_Sender_100_100.txt", true));
-            writer.append(goodput + "\n");
-            writer.close();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        double goodPut = (double) size / timeDiff / 1000;
+        writeResults(goodPut, "UDP_Results");
 
         System.out.println("Size of message was: " + size + " bytes");
         System.out.println("Übertragungsdauer war: " + timeDiff + " Millisekunden");
-        System.out.println("Durchsatz: " + goodput + "kB");
+        System.out.println("Durchsatz: " + goodPut + "kB");
     }
 
     private int sentMessage(int timesSent) {
@@ -122,4 +130,15 @@ public class SenderNew {
         }
         return timesSent;
     }
+
+    private void writeResults(double goodPut, String filename){
+        try {
+            PrintWriter writer = new PrintWriter(new FileWriter(filename, true));
+            writer.append(String.valueOf(goodPut)).append("\n");
+            writer.close();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 }
+
