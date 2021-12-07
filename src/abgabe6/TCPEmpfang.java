@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.concurrent.TimeUnit;
 
 public class TCPEmpfang {
 
@@ -12,46 +13,50 @@ public class TCPEmpfang {
     }
 
     private void startTCPEmpfang() {
-        try (ServerSocket serverSocket = new ServerSocket(8010)) {
+        try (ServerSocket serverSocket = new ServerSocket(4712)) {
             System.out.println("Waiting for clients...");
             while (true) {
-                acceptConnection(serverSocket);
+                try(Socket s = serverSocket.accept()){
+                    acceptConnection(s);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void acceptConnection(ServerSocket serverSocket){
-        try (Socket s = serverSocket.accept()) {
-            int TIMEOUT = 3000;
-            s.setSoTimeout(TIMEOUT);
-
+    private void acceptConnection(Socket s){
+        try{
+            System.out.println("NEU");
             int size = 0;
             long timeEnd;
             final long timeStart = System.currentTimeMillis();
 
-            while (true){
-                try (BufferedReader br = new BufferedReader((new InputStreamReader(s.getInputStream())))) {
-                    for (String line = br.readLine(); line != null; line = br.readLine()) {
-                        size += line.getBytes().length;
-                    }
-                } catch (SocketTimeoutException se) {
-                    timeEnd = System.currentTimeMillis() - TIMEOUT;
-                    break;
+            try (BufferedInputStream input = new BufferedInputStream(s.getInputStream())) {
+                while (input.read() != -1){
+                    size += input.read();
+                    TimeUnit.MILLISECONDS.sleep(1);
                 }
+            } catch (InterruptedException e){
+                e.printStackTrace();
             }
 
-            final long seconds = (timeEnd - timeStart) / 1000;
-            final double goodPut = (double) size / seconds;
+            timeEnd = System.currentTimeMillis();
+            final long timeDiff = timeEnd - timeStart;
+            final double goodPut = (double) size / timeDiff / 125;
 
-            System.out.println("The goodput was: " + goodPut + "kB");
+            System.out.println("The goodput was: " + goodPut + " kbit/s");
 
             writeResults(goodPut);
         } catch (IOException e){
             e.printStackTrace();
         }
+
     }
+
+
 
     private void getMessage(Socket socket){
 

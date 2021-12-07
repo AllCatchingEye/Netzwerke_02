@@ -19,7 +19,7 @@ public class SenderNew {
     public static void main(String[] args) {
         String protocol = "TCP";
         int num = 0;
-        while (num < 10){
+        while (num < 1){
             SenderNew senderNew = new SenderNew();
             senderNew.chooseProtocol(protocol);
             senderNew.delay(1500);
@@ -40,17 +40,17 @@ public class SenderNew {
 
     private void sendTCP() {
 
-        long sendingTime = System.currentTimeMillis() + 3000;
+        long sendingTime = System.currentTimeMillis() + 1400;
         int packageCount = 0;
 
-        String message = "a".repeat(10) + "\n";
+        String message = "a".repeat(500) + "\n";
 
         while(System.currentTimeMillis() < sendingTime){
             if(packageCount % N == 0){
                 delay(k);
             }
 
-            try (Socket socket = new Socket(TARGETHOST, 8010)) {
+            try (Socket socket = new Socket(TARGETHOST, 4712)) {
                 try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
                     bw.write(message);
                     bw.flush();
@@ -63,7 +63,7 @@ public class SenderNew {
         }
 
         int data = packageCount * message.getBytes().length;
-        double goodPut = (double) data / sendingTime;
+        double goodPut = (double) data / (sendingTime-1400);
 
         System.out.println("Size of message sent: " + data);
         System.out.println("The goodput was: " + goodPut +"kB/s");
