@@ -12,14 +12,14 @@ import java.util.concurrent.TimeUnit;
 public class SenderNew {
     public static final String FILEPATH = "./loremIpsum.txt";
     public static final String FILEPATH_TCP = "./loremIpsumTCP.txt";
-    private static final int k = 100;
+    private static final int k = 0;
     private static final int N = 100;
     private static final String TARGETHOST = "localhost";
 
     public static void main(String[] args) {
         String protocol = "TCP";
         int num = 0;
-        while (num < 1){
+        while (num < 10){
             SenderNew senderNew = new SenderNew();
             senderNew.chooseProtocol(protocol);
             senderNew.delay(1500);
@@ -40,35 +40,36 @@ public class SenderNew {
 
     private void sendTCP() {
 
-        long sendingTime = System.currentTimeMillis() + 1400;
-        int packageCount = 0;
+        int messagesToSend = 1000;
+        String message = "Hallo";
+        int data = message.getBytes().length *messagesToSend;
+        long timeStart = 0;
+        long timeEnd = 0;
 
-        String message = "a".repeat(500) + "\n";
+        try (Socket socket = new Socket(TARGETHOST, 4712)) {
+            try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
+                timeStart = System.currentTimeMillis();
+                while (messagesToSend > 0){
+                    if(messagesToSend % N == 0)
+                        delay(k);
 
-        while(System.currentTimeMillis() < sendingTime){
-            if(packageCount % N == 0){
-                delay(k);
-            }
-
-            try (Socket socket = new Socket(TARGETHOST, 4712)) {
-                try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
                     bw.write(message);
                     bw.flush();
-
-                    packageCount++;
+                    messagesToSend--;
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+                timeEnd = System.currentTimeMillis();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        long sendingTime = timeEnd - timeStart;
 
-        int data = packageCount * message.getBytes().length;
-        double goodPut = (double) data / (sendingTime-1400);
+        double goodPut = (double) data / sendingTime / 125;
 
         System.out.println("Size of message sent: " + data);
         System.out.println("The goodput was: " + goodPut +"kB/s");
 
-        writeResults(goodPut, "TCP_Ergebnisse.txt");
+        writeResults(goodPut, "TCP_Sender_Messung.txt");
     }
 
 
@@ -134,7 +135,7 @@ public class SenderNew {
     private void writeResults(double goodPut, String filename){
         try {
             PrintWriter writer = new PrintWriter(new FileWriter(filename, true));
-            writer.append(String.valueOf(goodPut)).append("\n");
+            writer.append(String.valueOf(goodPut)).append(",\n");
             writer.close();
         } catch (IOException e){
             e.printStackTrace();
