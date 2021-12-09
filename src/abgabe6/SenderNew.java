@@ -10,14 +10,14 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class SenderNew {
-    public static final String FILEPATH = "./loremIpsum.txt";
+    public static final String FILEPATH = "C:\\Users\\Kicos\\IdeaProjects\\abgabe2-grp2-02\\src\\abgabe6\\loremIpsum.txt";
     public static final String FILEPATH_TCP = "./loremIpsumTCP.txt";
     private static final int k = 0;
     private static final int N = 100;
     private static final String TARGETHOST = "localhost";
 
     public static void main(String[] args) {
-        String protocol = "TCP";
+        String protocol = "UDP";
         int num = 0;
         while (num < 10){
             SenderNew senderNew = new SenderNew();
@@ -40,15 +40,16 @@ public class SenderNew {
 
     private void sendTCP() {
 
-        int messagesToSend = 1000;
-        String message = "Hallo";
+        int messagesToSend = 5000;
+        String message = "Hallo".repeat(1000);
         int data = message.getBytes().length *messagesToSend;
         long timeStart = 0;
         long timeEnd = 0;
 
+        timeStart = System.currentTimeMillis();
         try (Socket socket = new Socket(TARGETHOST, 4712)) {
             try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
-                timeStart = System.currentTimeMillis();
+
                 while (messagesToSend > 0){
                     if(messagesToSend % N == 0)
                         delay(k);
@@ -57,11 +58,12 @@ public class SenderNew {
                     bw.flush();
                     messagesToSend--;
                 }
-                timeEnd = System.currentTimeMillis();
+
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        timeEnd = System.currentTimeMillis();
         long sendingTime = timeEnd - timeStart;
 
         double goodPut = (double) data / sendingTime / 125;
@@ -109,10 +111,9 @@ public class SenderNew {
 
         long timeDiff = System.currentTimeMillis() - timeStart;
         int size = timesSent * 1400;
-        double goodPut = (double) size / timeDiff / 1000;
+        double goodPut = (double) size / timeDiff / 125;
         writeResults(goodPut, "UDP_Results");
 
-        System.out.println("Size of message was: " + size + " bytes");
         System.out.println("Übertragungsdauer war: " + timeDiff + " Millisekunden");
         System.out.println("Durchsatz: " + goodPut + "kB");
     }

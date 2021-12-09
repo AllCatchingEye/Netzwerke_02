@@ -38,9 +38,8 @@ public class UDPEmpfaenger {
                     len += tmp;
                 }
                 long receiveTime = System.currentTimeMillis() - timeBegin - TIMEOUT;
-                double kB_Goodput = (double) len / receiveTime / 1000;
+                double kB_Goodput = (double) len / receiveTime / 125;
                 if (len != -1) {
-                    System.out.println("Size of message was: " + len + " bytes");
                     System.out.println("Uebertragungsdauer: " + receiveTime + " Millisekunden.");
                     System.out.println(len + " Bytes empfangen");
                     System.out.println("Durchsatz: " + kB_Goodput + "kB pro Sekunde");
