@@ -37,6 +37,7 @@ public class UDPEmpfaenger {
                     tmp = this.receiveSingle();
                     len += tmp;
                 }
+
                 long receiveTime = System.currentTimeMillis() - timeBegin - TIMEOUT;
                 double kB_Goodput = (double) len / receiveTime / 125;
                 if (len != -1) {

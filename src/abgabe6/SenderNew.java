@@ -17,7 +17,7 @@ public class SenderNew {
     private static final String TARGETHOST = "localhost";
 
     public static void main(String[] args) {
-        String protocol = "UDP";
+        String protocol = "TCP";
         int num = 0;
         while (num < 10){
             SenderNew senderNew = new SenderNew();
@@ -40,32 +40,32 @@ public class SenderNew {
 
     private void sendTCP() {
 
-        int messagesToSend = 5000;
-        String message = "Hallo".repeat(1000);
-        int data = message.getBytes().length *messagesToSend;
+        long timeToSend = 5000;
+        String message = "a".repeat(1400);
         long timeStart = 0;
         long timeEnd = 0;
+        int sentCount = 0;
 
-        timeStart = System.currentTimeMillis();
         try (Socket socket = new Socket(TARGETHOST, 4712)) {
             try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
-
-                while (messagesToSend > 0){
-                    if(messagesToSend % N == 0)
+                timeStart = System.currentTimeMillis();
+                while (System.currentTimeMillis() - timeStart < timeToSend){
+                    if(sentCount % N == 0)
                         delay(k);
 
                     bw.write(message);
                     bw.flush();
-                    messagesToSend--;
+                    sentCount++;
                 }
-
+                timeEnd = System.currentTimeMillis();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        timeEnd = System.currentTimeMillis();
+
         long sendingTime = timeEnd - timeStart;
 
+        int data = message.getBytes().length * sentCount;
         double goodPut = (double) data / sendingTime / 125;
 
         System.out.println("Size of message sent: " + data);
