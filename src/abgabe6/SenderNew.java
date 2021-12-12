@@ -17,7 +17,7 @@ public class SenderNew {
     private static final String TARGETHOST = "localhost";
 
     public static void main(String[] args) {
-        String protocol = "TCP";
+        String protocol = "UDP";
         int num = 0;
         while (num < 10){
             SenderNew senderNew = new SenderNew();
@@ -67,8 +67,6 @@ public class SenderNew {
 
         int data = message.getBytes().length * sentCount;
         double goodPut = (double) data / sendingTime / 125;
-
-        System.out.println("Size of message sent: " + data);
         System.out.println("The goodput was: " + goodPut +"kB/s");
 
         writeResults(goodPut, "TCP_Sender_Messung.txt");
@@ -112,7 +110,7 @@ public class SenderNew {
         long timeDiff = System.currentTimeMillis() - timeStart;
         int size = timesSent * 1400;
         double goodPut = (double) size / timeDiff / 125;
-        writeResults(goodPut, "UDP_Results");
+        writeResults(goodPut, "UDP_Sender");
 
         System.out.println("Übertragungsdauer war: " + timeDiff + " Millisekunden");
         System.out.println("Durchsatz: " + goodPut + "kB");

@@ -41,8 +41,6 @@ public class TCPEmpfang {
 
             final long timeDiff = timeEnd - timeStart;
             final double goodPut = (double) size / timeDiff / 125;
-
-            System.out.println("Size of message received: " + size + " Bit");
             System.out.println("The goodput was: " + goodPut + " kbit/s");
 
             writeResults(goodPut);

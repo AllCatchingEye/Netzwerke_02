@@ -46,7 +46,7 @@ public class UDPEmpfaenger {
                     System.out.println("Durchsatz: " + kB_Goodput + "kB pro Sekunde");
 
                     try {
-                        PrintWriter writer = new PrintWriter(new FileWriter("UDP_100_100.txt", true));
+                        PrintWriter writer = new PrintWriter(new FileWriter("UDP_Empfang.txt", true));
                         writer.append(kB_Goodput + "\n");
                         writer.close();
                     } catch (IOException e){
